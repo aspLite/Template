@@ -99,6 +99,12 @@ class cls_asplite_formbuilder
 		txt.add "text",value
 	
 	end sub
+	
+	public function request(value)
+	
+		request=aspl.getRequest(value)
+		
+	end function
 
 	public function field(value)
 

@@ -3,8 +3,8 @@
 form.write "<p>This is block 1</p>"
 
 'see block 3
-if not aspl.isEmpty(aspl.getRequest("name")) then
-	form.write "<div class=""alert alert-info"">Welcome " & aspl.htmlencode(aspl.getRequest("name")) & "</div>"
+if not aspl.isEmpty(form.request("name")) then
+	form.write "<div class=""alert alert-info"">Welcome " & aspl.htmlencode(form.request("name")) & "</div>"
 end if
 
 %>

@@ -3,8 +3,8 @@
 form.write "<p>This is block 2</p>"
 
 'see modal.resx
-if not aspl.isEmpty(aspl.getRequest("name")) then
-	form.write "<div class=""alert alert-warning"">Welcome " & aspl.htmlencode(aspl.getRequest("name")) & "</div>"
+if not aspl.isEmpty(form.request("name")) then
+	form.write "<div class=""alert alert-warning"">Welcome " & aspl.htmlencode(form.request("name")) & "</div>"
 end if
 
 dim modal : set modal=form.field("button")

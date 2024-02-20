@@ -59,7 +59,6 @@ end if
 
 nav=nav & "</ul>"
 
-'response.write default
 dim body : body=aspL.loadText("html/default.htm")
 body=replace(body,"[main]",main,1,-1,1)
 body=replace(body,"[nav]",nav,1,-1,1)
@@ -73,6 +72,23 @@ body=replace(body,"[close]",l("close"),1,-1,1)
 body=replace(body,"[signin]",l("signin"),1,-1,1)
 body=replace(body,"[register]",l("register"),1,-1,1)
 body=replace(body,"[curPageURL]",getSiteUrl,1,-1,1)
+
+'user pasword is admin
+if sec.autologin then 
+	if user.sPw="8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918" then
+	
+		dim changedefaultpw : changedefaultpw="<div id=""changedefaultpw"" class=""container"">"
+		changedefaultpw=changedefaultpw & "<div class=""alert alert-danger mb-4"">"
+		changedefaultpw=changedefaultpw & "<a class=""btn btn-danger"" href=""#"" "
+		changedefaultpw=changedefaultpw & "onclick=""modalAspForm('myaccount_resetpw','','');return false;"">"
+		changedefaultpw=changedefaultpw & aspl.htmlEncode(l ("changedefaultpw")) &"</a></div></div>"	
+	
+		body=replace(body,"[PWWARNING]",changedefaultpw,1,-1,1)
+		
+	end if
+end if
+
+body=replace(body,"[PWWARNING]","",1,-1,1)
 
 response.write body
 

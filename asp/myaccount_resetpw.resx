@@ -31,12 +31,19 @@ if form.postback then
 			close.add "class","btn btn-secondary"
 			close.add "databsdismiss","modal"
 			
+			'error message verwijderen
+			form.writeJS "$('#changedefaultpw').remove();"
+			
 			form.build				
 			
 		end if
 		
 	end if
 	
+else
+
+	aspl.addInfo l("yourealmosttherepleasechooseapasswordpas")
+
 end if
 
 dim iId : set iId=form.field("hidden")

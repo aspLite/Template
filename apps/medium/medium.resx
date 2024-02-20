@@ -47,7 +47,7 @@ modal.add "onclick",loadmodal("modal.resx","&id=12345")
 if form.postback then
 
 	'this asplite function "addInfo" flushes out a Bootstrap Info Alert
-	aspl.addInfo ("Hello " & aspl.htmlencode(aspl.getRequest("sName")))
+	aspl.addInfo ("Hello " & aspl.htmlencode(form.request("sName")))
 
 end if
 

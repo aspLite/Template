@@ -26,7 +26,7 @@ other.add "onclick",load("medium.resx","")
 
 if form.postback then
 
-	aspl.addWarning ("Hello " & aspl.htmlencode(aspl.getRequest("sName")))
+	aspl.addWarning ("Hello " & aspl.htmlencode(form.request("sName")))
 
 end if
 %>

@@ -2,11 +2,11 @@
 
 if form.postback then
 
-	aspl.addFB ("Hello " & aspl.htmlencode(aspl.getRequest("sName")))
+	aspl.addFB ("Hello " & aspl.htmlencode(form.request("sName")))
 	
 	form.write "<p>Block 1 has been updated as well!</p>"
 	
-	form.writejs loadInTarget("block1","block1.resx","&name=" & server.urlencode(aspl.getRequest("sName")))
+	form.writejs loadInTarget("block1","block1.resx","&name=" & server.urlencode(form.request("sName")))
 	
 end if
 
