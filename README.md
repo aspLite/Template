@@ -10,10 +10,9 @@ Password: admin (make sure to change that)
 
 ## What?
 
-This Classic ASP web application is a template for modern Classic ASP web development. It makes use of Bootstrap 5.3 and the jQuery DataTables plugin. AJAX is used to load specific ASP scripts based on specific events (onload, click) in specific areas of your UI. 
-Communication between server and browser is in JSON data format for most requests.
+This Classic ASP/VBScript web application is a template for modern Classic ASP web development. It makes use of Bootstrap 5.3 and the jQuery DataTables plugin. AJAX is used to load specific ASP/VBScript scripts based on specific events (onload, click) in specific areas of your UI. Communication between server and browser happens via the JSON data format.
 
-The idea behind this app is to have something to start from each time you create a new web application. Template takes care of:
+The idea behind this app is to have something to start from each time you create a new Classic ASP/VBScript web application. Template takes care of:
 - User registration / signin / forgot password / confirmation email / my account / signout
 - Multilingual application
 - Templating (Bootstrap 5)
