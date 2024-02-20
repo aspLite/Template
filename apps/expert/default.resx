@@ -1,0 +1,11 @@
+<%
+
+'here some bootstrap cards will be loaded and 3 different scripts are loaded
+form.write aspl.loadText(myApp.sPath & "/default.htm")
+
+form.writejs loadInTarget("block1","block1.resx","")
+form.writejs loadInTarget("block2","block2.resx","")
+form.writejs loadInTarget("block3","block3.resx","")
+form.writejs loadInTarget("block4","block4.resx","") 'this block just returns an error
+
+%>

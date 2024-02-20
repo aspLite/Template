@@ -1,0 +1,32 @@
+<%
+form.write "<p>Yet another page</p>"
+
+'lets add an input field and a submit button
+dim sName : set sName=form.field("text")
+sName.add "required",true
+sName.add "class","form-control"
+sName.add "label",l("name")
+sName.add "name","sName"
+sName.add "maxlength",50
+
+'this adds 7px of margin
+form.newline
+
+dim submit : set submit=form.field("submit")
+submit.add "html",l("save")
+submit.add "class","btn btn-warning"
+submit.add "container","span"
+
+'a regular button that loads another script
+dim other : set other=form.field("button")
+other.add "html","Back"
+other.add "class","btn btn-info"
+other.add "container","span"
+other.add "onclick",load("medium.resx","")
+
+if form.postback then
+
+	aspl.addWarning ("Hello " & aspl.htmlencode(aspl.getRequest("sName")))
+
+end if
+%>

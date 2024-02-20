@@ -1,0 +1,31 @@
+<%
+
+if form.postback then
+
+	aspl.addFB ("Hello " & aspl.htmlencode(aspl.getRequest("sName")))
+	
+	form.write "<p>Block 1 has been updated as well!</p>"
+	
+	form.writejs loadInTarget("block1","block1.resx","&name=" & server.urlencode(aspl.getRequest("sName")))
+	
+end if
+
+form.write "<p>This is block 3</p>"
+
+'lets add an input field and a submit button
+dim sName : set sName=form.field("text")
+sName.add "required",true
+sName.add "class","form-control"
+sName.add "label",l("name")
+sName.add "name","sName"
+sName.add "maxlength",50
+
+'this adds 7px of margin
+form.newline
+
+dim submit : set submit=form.field("submit")
+submit.add "html",l("save")
+submit.add "class","btn btn-warning"
+submit.add "container","span"
+
+%>

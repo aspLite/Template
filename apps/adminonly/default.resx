@@ -1,0 +1,3 @@
+<%
+form.write "This app is only available to administrators. It is not ""public""."
+%>

@@ -1,0 +1,6 @@
+<%
+
+This script will return an error because it's not valid ASP scripting
+Unfortunately, the error message will not return any line number!
+
+%>

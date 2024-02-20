@@ -1,0 +1,43 @@
+<%
+
+'was the form submitted?
+if form.postback then
+
+	'this asplite function "addInfo" flushes out a Bootstrap Info Alert
+	aspl.addInfo ("Hello " & aspl.htmlencode(aspl.getRequest("sName")))
+	
+	form.write "<p>This modal will auto-close in 3 seconds. Block2 will be updated by then.</p>"
+	
+	form.writejs loadInTarget("block2","block2.resx","&name=" & server.urlencode(aspl.getRequest("sName")))
+	
+	form.writejs "setTimeout(function(){$('#crmModal').modal('hide')},3000);"	
+	
+	'by building the form, execution of this script stops here
+	form.build
+
+end if
+
+form.writejs modalLabel("this is the modal header")
+
+'lets add an input field and a submit button
+dim sName : set sName=form.field("text")
+sName.add "required",true
+sName.add "class","form-control"
+sName.add "label",l("name")
+sName.add "name","sName"
+sName.add "maxlength",50
+
+'this adds 7px of margin
+form.newline
+
+dim submit : set submit=form.field("submit")
+submit.add "html",l("submit")
+submit.add "class","btn btn-warning"
+submit.add "container","span"
+
+dim close : set close=form.field("button")
+close.add "html",l("close")
+close.add "class","btn btn-secondary"
+close.add "databsdismiss","modal"
+
+%>

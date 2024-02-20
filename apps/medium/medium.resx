@@ -1,0 +1,54 @@
+<%
+'this line includes other ASP resources
+'this is how to replace the include-statement in classic ASP
+aspl(myApp.sPath & "/includes/begin.resx")
+
+'let's use a function that we included in the previous line
+form.write getDate
+
+'reuse the built-in translater and user-class
+form.write "<p>" & l("welcome")  & " " & user.sFirstname & "!</p>"
+
+'use any of the built-in functions of asplite
+form.write aspl.loadText(myApp.sPath & "/html.txt")
+
+'lets add an input field and a submit button
+dim sName : set sName=form.field("text")
+sName.add "required",true
+sName.add "class","form-control"
+sName.add "label",l("name")
+sName.add "name","sName"
+sName.add "maxlength",50
+
+'this adds 7px of margin
+form.newline
+
+'a regular submit button
+dim submit : set submit=form.field("submit")
+submit.add "html",l("save")
+submit.add "class","btn btn-warning"
+submit.add "container","span"
+
+'a regular button that loads another script
+dim other : set other=form.field("button")
+other.add "html","Other page"
+other.add "class","btn btn-danger"
+other.add "container","span"
+other.add "onclick",load("other.resx","")
+
+'a regular button that redirects to a different script
+dim modal : set modal=form.field("button")
+modal.add "html","Modal window"
+modal.add "class","btn btn-info"
+modal.add "container","span"
+modal.add "onclick",loadmodal("modal.resx","&id=12345")
+
+'was the form submitted?
+if form.postback then
+
+	'this asplite function "addInfo" flushes out a Bootstrap Info Alert
+	aspl.addInfo ("Hello " & aspl.htmlencode(aspl.getRequest("sName")))
+
+end if
+
+%>

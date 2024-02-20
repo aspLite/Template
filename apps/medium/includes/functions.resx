@@ -1,0 +1,7 @@
+<%
+
+function getDate
+	getDate=date
+end function
+
+%>

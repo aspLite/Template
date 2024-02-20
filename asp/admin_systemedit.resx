@@ -1,0 +1,69 @@
+<%
+user.checkifadmin
+
+dim form : set form=aspl.form
+
+if form.postback then
+
+	'session securitycheck
+	if form.sameSession then	
+
+		system.sName 					= aspl.getRequest("sName")
+		system.bAllowNewRegistrations	= aspl.convertBool(aspl.getRequest("bAllowNewRegistrations"))
+		system.bAllowUsersDelete		= aspl.convertBool(aspl.getRequest("bAllowUsersDelete"))
+						
+		if system.save then	
+		
+			aspl.addFB(l("changeshavebeensaved"))			
+			
+		end if
+		
+	end if
+	
+end if
+
+dim sName : set sName=form.field("text")
+sName.add "name","sName"
+sName.add "label",l("name")
+sName.add "required",true
+sName.add "value",system.sName
+sName.add "maxlength",50
+
+form.newline
+
+set options=aspl.dict
+options.add "false",l("no")
+options.add "true",l("yes")
+
+set bAllowNewRegistrations = form.field("select")
+bAllowNewRegistrations.add "value",system.bAllowNewRegistrations
+bAllowNewRegistrations.add "name","bAllowNewRegistrations"
+bAllowNewRegistrations.add "id","bAllowNewRegistrations"
+bAllowNewRegistrations.add "options",options
+bAllowNewRegistrations.add "label",l("allowNewRegistrations")
+
+form.newline
+
+set bAllowUsersDelete = form.field("select")
+bAllowUsersDelete.add "value",system.bAllowUsersDelete
+bAllowUsersDelete.add "name","bAllowUsersDelete"
+bAllowUsersDelete.add "id","bAllowUsersDelete"
+bAllowUsersDelete.add "options",options
+bAllowUsersDelete.add "label",l("allowusersdelete")
+
+form.newline
+
+dim submit : set submit=form.field("submit")
+submit.add "html",l("Save")
+submit.add "class","btn btn-primary"
+submit.add "container","span"
+
+dim cancel : set cancel=form.field("button")
+cancel.add "html",l("cancel")
+cancel.add "class","btn btn-secondary"
+cancel.add "container","span"
+cancel.add "onclick","load('admin_system','admin_system','');"
+
+form.build()
+
+%>

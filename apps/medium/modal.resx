@@ -1,0 +1,14 @@
+<%
+
+form.writejs modalLabel("this is the modal header")
+
+form.write "<p>this is a modal body</p>"
+
+form.write "<p>this is the parameter: " & aspl.getRequest("id") & "</p>"
+
+dim close : set close=form.field("button")
+close.add "html",l("close")
+close.add "class","btn btn-secondary"
+close.add "databsdismiss","modal"
+
+%>

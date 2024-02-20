@@ -1,0 +1,16 @@
+<%
+
+form.write "<p>This is block 2</p>"
+
+'see modal.resx
+if not aspl.isEmpty(aspl.getRequest("name")) then
+	form.write "<div class=""alert alert-warning"">Welcome " & aspl.htmlencode(aspl.getRequest("name")) & "</div>"
+end if
+
+dim modal : set modal=form.field("button")
+modal.add "html","Modal window"
+modal.add "class","btn btn-info"
+modal.add "container","span"
+modal.add "onclick",loadmodal("modal.resx","&id=12345")
+
+%>
