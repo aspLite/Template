@@ -1,7 +1,8 @@
-##asplLite template
+asplLite template
 
--login: admin@admin.com
--password: 6VGSxukr24
+login: admin@admin.com
+
+password: 6VGSxukr24
 
 Change the password after login!
 
