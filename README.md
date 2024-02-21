@@ -4,9 +4,10 @@
 Install as a site or virtual directory. Enable 32bits applications in your IIS application pool as an MS Access database is used.
 
 ## Login
-Username: admin@admin.com
+Username: admin@admin.com<br>
+Password: admin
 
-Password: admin (make sure to change that)
+Make sure to update these credentials right after first login for security reasons.
 
 ## What?
 
