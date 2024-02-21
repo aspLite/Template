@@ -1,7 +1,7 @@
 # Template
 
 ## Installation
-Install as a site or virtual directory. Enable 32bits applications in your IIS application pool.
+Install as a site or virtual directory. Enable 32bits applications in your IIS application pool as an MS Access database is used.
 
 ## Login
 Username: admin@admin.com
