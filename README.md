@@ -19,7 +19,7 @@ The idea behind this app is to have something to start from each time you create
 - Templating (Bootstrap 5)
 - System settings / Mail setup
 - Compress/Backup database / Recycle application
-- Create custom applications on top of Template
+- Create your own custom applications on top
 - Error handling
 
 ## Examples
