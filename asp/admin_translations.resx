@@ -23,7 +23,7 @@ dim language, languagelist : set languagelist=new cls_languageList
 
 set languagelist=languagelist.list
 
-dim rs : set rs=db.execute("select * from tblLabel order by sCode")
+dim rs : set rs=dbL.execute("select * from tblLabel order by sCode")
 
 while not rs.eof
 	table=table & "<tr>"

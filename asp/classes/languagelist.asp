@@ -9,7 +9,7 @@ class cls_languageList
 	
 		dim sql : sql="select * from tblLanguage where bDeleted=false order by sName"
 		
-		dim language, rs : set rs=db.execute(sql)				
+		dim language, rs : set rs=dbL.execute(sql)				
 		
 		while not rs.eof			
 		
@@ -33,7 +33,7 @@ class cls_languageList
 	
 		dim sql : sql="select iId, sName from tblLanguage where bActive=true and bDeleted=false order by sName"
 		
-		dim language, rs : set rs=db.execute(sql)				
+		dim language, rs : set rs=dbL.execute(sql)				
 		
 		while not rs.eof			
 		

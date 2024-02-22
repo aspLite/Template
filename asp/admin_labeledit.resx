@@ -47,7 +47,7 @@ if form.postback then
 		
 		if label.iId=0 then
 			'check if code exists
-			dim rs : set rs=db.execute("select iId from tblLabel where sCode='" & aspl.sqli(label.sCode) & "'")
+			dim rs : set rs=dbL.execute("select iId from tblLabel where sCode='" & aspl.sqli(label.sCode) & "'")
 			if not rs.eof then 
 				check=false
 				aspl.addErr(l("thiscodeexistsalready"))

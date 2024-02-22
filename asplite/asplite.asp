@@ -95,6 +95,17 @@ class cls_asplite
 		execute removeCRB(stream(path,false,""))
 	end sub
 	
+	
+	public sub removeAllCookies
+	
+		dim cookie
+		for each cookie in Response.Cookies
+			Response.Cookies(cookie).Expires = DateAdd("d",-1,now())
+		next
+		
+	end sub
+	
+	
 	public function recycleApplication
 
 		on error resume next
@@ -330,22 +341,14 @@ class cls_asplite
 
 		value=lcase(value)
 
-		if plugins is nothing then
-			set plugins=dict
-		end if
+		if plugins is nothing then set plugins=dict		
 
-		if not plugins.exists(value) then
-
+		if not plugins.exists(value) then 
 			exec(aspL_path & "/plugins/" & value & "/" & value & ".asp")
+			plugins.add value,""
+		end if	
 
-			dim pluginCls
-			set pluginCls=eval("new cls_asplite_" & value)
-
-			plugins.add value,pluginCls
-
-		end if
-
-		set plugin=plugins(value)
+		set plugin=eval("new cls_asplite_" & value)
 
 	end function
 

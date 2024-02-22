@@ -19,7 +19,7 @@ class cls_Sec
 			autologin=true
 		else
 			autologin=signin(decrypt(request.cookies("token1")),request.cookies("token2"))
-		end if			
+		end if		
 	
 	end function	
 	
@@ -85,13 +85,17 @@ class cls_Sec
 	
 	public function signout
 	
+		Response.Cookies("token1")=""
+		Response.Cookies("token2")=""
 		Response.Cookies("token1").expires=DateAdd("d",-2,date)
 		Response.Cookies("token2").expires=DateAdd("d",-2,date)
+		
+		aspl.removeAllCookies
 		
 		session("sec")=false
 		session("userID")=""
 		session.abandon()
-		signout=true
+		signout=true		
 	
 	end function
 	

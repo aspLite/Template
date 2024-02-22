@@ -30,7 +30,7 @@ class cls_language
 		
 			dim sql : sql = "select * from tblLanguage where bDeleted=false and iId=" & id
 			
-			set RS = db.execute(sql)
+			set RS = dbL.execute(sql)
 			
 			if not rs.eof then
 			
@@ -59,7 +59,7 @@ class cls_language
 		
 		if bDefault then bActive=true 'default taal is steeds actief
 		
-		dim rs : set rs = db.rs		
+		dim rs : set rs = dbL.rs		
 		
 		if iId=0 then			
 			rs.Open "select * from tblLanguage where 1=2"
@@ -78,7 +78,7 @@ class cls_language
 		iId = aspl.convertNmbr(rs("iId"))
 		
 		if bDefault then 
-			db.execute("update tblLanguage set bDefault=false where iId<>" & iId)
+			dbL.execute("update tblLanguage set bDefault=false where iId<>" & iId)
 		end if
 		
 		rs.close
@@ -93,9 +93,9 @@ class cls_language
 		
 		if iId<>0 then
 			dim rs		
-			set rs=db.execute("delete from tblLabel where iLanguageID=" & aspl.convertNmbr(iId))
+			set rs=dbL.execute("delete from tblLabel where iLanguageID=" & aspl.convertNmbr(iId))
 			set rs=nothing
-			set rs=db.execute("update tblLanguage set bDeleted=true where iId=" & aspl.convertNmbr(iId))
+			set rs=dbL.execute("update tblLanguage set bDeleted=true where iId=" & aspl.convertNmbr(iId))
 			set rs=nothing
 			remove=true
 		end if
@@ -120,7 +120,7 @@ function defaultLanguage
 
 		set p_defaultLanguage=new cls_language
 
-		dim rs : set rs=db.execute("select iId from tblLanguage where bDefault=true")
+		dim rs : set rs=dbL.execute("select iId from tblLanguage where bDefault=true")
 		
 		if not rs.eof then p_defaultLanguage.pick(rs(0))
 	
@@ -148,7 +148,7 @@ function l(sCode)
 	'bij het versturen van mails in andere talen
 	if overruleLID<>0 then langID=overruleLID
 
-	dim rs : set rs=db.execute("select sValue from tblLabel where iLanguageID=" & aspl.convertNmbr(langID) & " and sCode='" & lcase(aspl.sqli(sCode)) & "'")
+	dim rs : set rs=dbL.execute("select sValue from tblLabel where iLanguageID=" & aspl.convertNmbr(langID) & " and sCode='" & lcase(aspl.sqli(sCode)) & "'")
 		
 	if not rs.eof then
 		l=aspl.convertStr(rs(0))
@@ -166,7 +166,7 @@ function ll(sCode,iLangId)
 
 	sCode=trim(sCode)
 	
-	dim rs : set rs=db.execute("select sValue from tblLabel where iLanguageID=" & aspl.convertNmbr(iLangId) & " and sCode='" & aspl.sqli(sCode) & "'")
+	dim rs : set rs=dbL.execute("select sValue from tblLabel where iLanguageID=" & aspl.convertNmbr(iLangId) & " and sCode='" & aspl.sqli(sCode) & "'")
 		
 	if not rs.eof then
 		ll=aspl.convertStr(rs(0))
@@ -182,7 +182,7 @@ function llobj(sCode,iLangId)
 
 	set llobj=new cls_label
 
-	dim rs : set rs=db.execute("select iId from tblLabel where iLanguageID=" & aspl.convertNmbr(iLangId) & " and sCode='" & aspl.sqli(sCode) & "'")
+	dim rs : set rs=dbL.execute("select iId from tblLabel where iLanguageID=" & aspl.convertNmbr(iLangId) & " and sCode='" & aspl.sqli(sCode) & "'")
 		
 	if not rs.eof then
 		llobj.pick(rs(0))

@@ -3,9 +3,15 @@
 <%
 'create a database object. 
 const dbpath	=	"db/db.mdb"
-dim db : set db=aspL.plugin("database") : db.path=dbpath
+const dblpath	=	"db/languages.mdb"
+const dbapath	=	"db/myapp.mdb"
+
+dim db 	: set db=aspL.plugin("database") 	: db.path=dbpath
+dim dbL	: set dbL=aspL.plugin("database") 	: dbL.path=dblpath
+dim dba	: set dba=aspL.plugin("database") 	: dba.path=dbapath
+
 dim system : set system=new cls_system
-dim sec : set sec=new cls_Sec : sec.autologin
+dim sec : set sec=new cls_Sec  : sec.autologin
 dim user : set user=sec.user : user.setLoginTS
 
 if not aspl.isEmpty(aspL.getRequest("asplEvent")) then
@@ -74,7 +80,8 @@ body=replace(body,"[register]",l("register"),1,-1,1)
 body=replace(body,"[curPageURL]",getSiteUrl,1,-1,1)
 
 'user pasword is admin
-if sec.autologin then 
+if sec.autologin then
+ 
 	if user.sPw="8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918" then
 	
 		dim changedefaultpw : changedefaultpw="<div id=""changedefaultpw"" class=""container"">"
@@ -86,6 +93,7 @@ if sec.autologin then
 		body=replace(body,"[PWWARNING]",changedefaultpw,1,-1,1)
 		
 	end if
+	
 end if
 
 body=replace(body,"[PWWARNING]","",1,-1,1)

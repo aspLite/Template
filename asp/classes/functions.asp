@@ -453,6 +453,16 @@ function convertCalcDateTime(dt)
 end function
 
 
+function convertCalcDateTimeNoSpecialChars(dt)
+
+	convertCalcDateTimeNoSpecialChars=convertCalcDateTime(dt)
+	convertCalcDateTimeNoSpecialChars=replace(convertCalcDateTimeNoSpecialChars,"/","_",1,-1,1)
+	convertCalcDateTimeNoSpecialChars=replace(convertCalcDateTimeNoSpecialChars,":","_",1,-1,1)
+	convertCalcDateTimeNoSpecialChars=replace(convertCalcDateTimeNoSpecialChars," ","_",1,-1,1)
+	
+end function
+
+
 Function RemoveHTML( strText )
     Dim TAGLIST
     TAGLIST = ";!--;!DOCTYPE;A;ACRONYM;ADDRESS;APPLET;AREA;B;BASE;BASEFONT;" &_

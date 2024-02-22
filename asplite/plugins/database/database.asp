@@ -25,7 +25,7 @@ Class cls_asplite_database
 	end sub
 	
 	public sub open
-		getConn.open
+		p_getConn.open
 	end sub
 	
 	Public Function Execute(sql)

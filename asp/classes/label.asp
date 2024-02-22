@@ -1,7 +1,7 @@
 <%
 class cls_label
 
-	Public iId, sCode, sValue, iLanguageID	
+	Public iId, sCode, sValue, iLanguageID, dUpdatedTS
 	
 	Private Sub Class_Initialize		
 		iId=0		
@@ -28,7 +28,7 @@ class cls_label
 		
 		'code mag niet bestaan
 		if iId=0 then
-			dim rs : set rs=db.execute("select iId from tblLabel where sCode='" & sCode & "' and iLanguageID=" & aspl.convertNmbr(iLanguageID))
+			dim rs : set rs=dbL.execute("select iId from tblLabel where sCode='" & sCode & "' and iLanguageID=" & aspl.convertNmbr(iLanguageID))
 			if not rs.eof then aspl.addErr("Code exists already") : check=false			
 		end if
 	
@@ -44,14 +44,15 @@ class cls_label
 		
 			dim sql : sql = "select * from tblLabel where iId=" & id
 			
-			set RS = db.execute(sql)
+			set RS = dbL.execute(sql)
 			
 			if not rs.eof then
 			
 				iId					= rs("iId")
 				sCode				= rs("sCode")
 				sValue				= rs("sValue")
-				iLanguageID			= rs("iLanguageID")				
+				iLanguageID			= rs("iLanguageID")	
+				dUpdatedTS			= rs("dUpdatedTS")				
 	
 			end if
 			
@@ -70,7 +71,7 @@ class cls_label
 			exit function
 		end if
 		
-		dim rs : set rs = db.rs		
+		dim rs : set rs = dbL.rs		
 		
 		if iId=0 then			
 			rs.Open "select * from tblLabel where 1=2"
@@ -82,6 +83,7 @@ class cls_label
 		rs("sCode")					= trim(lcase(left(aspl.convertStr(sCode),50)))
 		rs("sValue")				= trim(aspl.convertStr(sValue))
 		rs("iLanguageID")			= aspl.convertNull(iLanguageID)
+		rs("dUpdatedTS")			= now()
 						
 		rs.Update 
 		
@@ -107,7 +109,7 @@ class cls_label
 	
 		if not canBeDeleted then remove=false : exit function
 		
-		db.execute("delete from tblLabel where sCode='" & aspl.sqli(sCode) & "'")
+		dbL.execute("delete from tblLabel where sCode='" & aspl.sqli(sCode) & "'")
 		
 		remove=true
 	
