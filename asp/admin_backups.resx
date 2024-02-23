@@ -16,13 +16,19 @@ table=table & "</tr>"
 table=table & "</thead>"
 table=table & "<tbody>"
 
-
 for each file in folder.files
-	table=table & "<tr>"
-	table=table & "<td>" & file.datecreated & "</td>"
-	table=table & "<td><a href=""#"" onclick=""load('admin_backupdetail','modalformXL','&filepath=" & server.urlencode(file.name) & "');"">" & replace(file.name,".resx","",1,-1,1) & "</a></td>"
-	table=table & "<td>" & round(file.size/1024/1024,2) & "MB</td>"
-	table=table & "</tr>"
+	
+	if aspl.getFileType(file.name)="resx" then 
+
+		table=table & "<tr>"
+		table=table & "<td>" & file.datecreated & "</td>"
+		table=table & "<td><a href=""#"" onclick=""load('admin_backupdetail','modalformXL','&filepath=" & server.urlencode(file.name) & "');"">"
+		table=table & replace(file.name,".resx","",1,-1,1) & "</a></td>"
+		table=table & "<td>" & round(file.size/1024/1024,2) & "MB</td>"
+		table=table & "</tr>"
+	
+	end if
+	
 next
 
 table=table & "</tbody></table>" & datatableFirstColumn("backupfiles")

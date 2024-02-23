@@ -3,7 +3,7 @@
 class cls_datatables_returnJson
 
 	private strOrder,draw,StartRecord,RowsPerPage,JsonAnswer,JsonHeader
-	public OrderDir, strSearch, strWhere, dbPath, strSelect, OrderCol, strUnion
+	public OrderDir, strSearch, strWhere, dbPath, strSelect, OrderCol, strUnion, dbClass
 
 	Private Sub Class_Initialize()
 	
@@ -48,7 +48,7 @@ class cls_datatables_returnJson
 	
 		'on error resume next
 		
-		'the recordset rs expects an open database connection (db)
+		'the recordset rs expects an open database connection (dbClass)
 		'this is a very basic SQL implementation. 
 		'If you need Group By/having, you would need to add it here
 		
@@ -62,7 +62,7 @@ class cls_datatables_returnJson
 			sql=sql & " " & strUnion & " Order By " & OrderCol  & " " & OrderDir
 		end if		
 			
-		dim rs : set rs=db.rsOpen(sql)		
+		dim rs : set rs=dbClass.rsOpen(sql)		
 		
 		'total number of results
 		dim rTotal : rTotal=rs.recordcount

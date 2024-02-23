@@ -1,7 +1,7 @@
 <%
 user.checkifadmin
 
-dim returnJson : set returnJson=new cls_datatables_returnJson
+dim returnJson : set returnJson=new cls_datatables_returnJson : set returnJson.dbClass=db
 dim strSelect,strWhere
 strSelect="select sLastname, sFirstname, sEmail, dLoginTS, dUpdatedTS, bAdmin, iId from tblUser "
 

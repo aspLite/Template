@@ -75,6 +75,12 @@ class cls_Sec
 			if aspl.isNumber(session("userID")) then				
 				p_user.pick(session("userID"))
 			end if 
+			
+			if aspl.convertBool(p_user.bAdmin) then 
+				session("bAdminUser")=true
+			else
+				session("bAdminUser")=false
+			end if
 		
 		end if
 		

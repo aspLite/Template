@@ -78,7 +78,6 @@ backups.add "html",l("availablebackups")
 backups.add "class","btn btn-success"
 backups.add "onclick","modalAspFormXL ('admin_backups','','');"
 
-
 form.build()
 
 %>
