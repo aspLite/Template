@@ -134,28 +134,26 @@ dim drag : drag="<div id=""draggable"" ondrop=""drop(event)"" ondragover=""allow
 for each song in songs
 	
 	drag=drag & "<div id=""" & song & """ class=""lead alert alert-warning"" draggable=""true"" style=""width:100%"" ondragstart=""drag(event)"">"
+					
+				drag=drag & "<a  class=""link link-danger"" href=""#"" "
+				drag=drag & "onclick=""$('#iDeleteID').val('" & song & "');$('#" & form.id & "').submit();return false;"">"
+				drag=drag & "<span style=""width:50px"" class=""material-symbols-outlined icon"">delete</span></a>"		
+			
 		
-		
-		
-		drag=drag & "<strong><a class=""link link-primary"" href=""#"" "
-		drag=drag & " onclick=""" & loadmodalXLiId("song_view.asp",songs(song).iId,"&fromManager=" & playlist.iId) & """>" & aspl.htmlencode(songs(song).sTitle) & "</a></strong><br>"		
-		
-		if not aspl.isEmpty(songs(song).sComments) then
-			drag=drag & "&nbsp;<small>" & l("comments") &": <strong>" & aspl.htmlencode(songs(song).sComments) & "</strong></small>"
-		end if
-		if not aspl.isEmpty(songs(song).sTuning) then
-			drag=drag & "&nbsp;<small>Tuning: <strong>" & aspl.htmlencode(songs(song).sTuning) & "</strong></small>"
-		end if
-		if not aspl.isEmpty(songs(song).sBPM) then
-			drag=drag & "&nbsp;<small>BPM: <strong>" & aspl.htmlencode(songs(song).sBPM) & "</strong></small>"
-		end if
-		
-		drag=drag & "<div class=""no-print float-end"" style=""max-width: 60px;margin-top:-30px"">"	
-		drag=drag & "<a class=""link link-danger"" href=""#"" "
-		drag=drag & "onclick=""$('#iDeleteID').val('" & song & "');$('#" & form.id & "').submit();return false;"">"
-		drag=drag & "<span style="""" class=""material-symbols-outlined"">delete</span></a>"
-		drag=drag & "<span style=""cursor:move"" class=""material-symbols-outlined"">drag_handle</span>"
-		drag=drag & "</div>"
+			drag=drag & "<strong><a class=""link link-primary"" href=""#"" "
+			drag=drag & " onclick=""" & loadmodalXLiId("song_view.asp",songs(song).iId,"&fromManager=" & playlist.iId) & """>" 
+			drag=drag & aspl.htmlencode(songs(song).sTitle) & "</a></strong>"		
+			
+			if not aspl.isEmpty(songs(song).sComments) then
+				drag=drag & "&nbsp;<small>" & l("comments") &": <strong>" & aspl.htmlencode(songs(song).sComments) & "</strong></small>"
+			end if
+			if not aspl.isEmpty(songs(song).sTuning) then
+				drag=drag & "&nbsp;<small>Tuning: <strong>" & aspl.htmlencode(songs(song).sTuning) & "</strong></small>"
+			end if
+			if not aspl.isEmpty(songs(song).sBPM) then
+				drag=drag & "&nbsp;<small>BPM: <strong>" & aspl.htmlencode(songs(song).sBPM) & "</strong></small>"
+			end if		
+			
 	
 	drag=drag & "</div>"
 next
