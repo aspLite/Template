@@ -88,12 +88,16 @@ class cls_asplite_formbuilder
 	
 	public sub write(value)
 	
+		value=aspl.convertStr(value)
+	
 		dim txt : set txt=field("plain")
 		txt.add "html",value
 	
 	end sub
 	
 	public sub writejs(value)
+	
+		value=aspl.convertStr(value)
 	
 		dim txt : set txt=field("script")
 		txt.add "text",value

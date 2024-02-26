@@ -79,3 +79,11 @@ z-index: 1500;
 .bd-mode-toggle .dropdown-menu .active .bi {
 display: block !important;
 }
+
+@media print
+{    
+    .no-print, .no-print *
+    {
+        display: none !important;
+    }
+}

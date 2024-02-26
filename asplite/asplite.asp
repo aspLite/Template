@@ -833,6 +833,15 @@ class cls_asplite
 		on error goto 0
 
 	End Function
+	
+	public function removeTabs(value)
+	
+		value=convertStr(value)
+	
+		removeTabs=replace(value,vbtab,"",1,-1,1)		
+		
+	
+	end function
 
 	public function convertStr(value)
 

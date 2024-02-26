@@ -113,15 +113,16 @@
 	}
 	
 	
-	function PrintElem(elem,title) {
+	function PrintElem(elem,title,subtitle) {
 	
 		var mywindow = window.open('', 'PRINT', 'height=500,width=750');
 
-		mywindow.document.write('<!doctype html><html lang="nl"><head><style>body {font-size:12pt} .no-print {display:none}</style>');
+		mywindow.document.write('<!doctype html><html lang="nl"><head><style>body {font-size:16pt} .no-print {display:none}</style>');
 		mywindow.document.write('<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">');
 		mywindow.document.write('<title>' + document.title  + '</title>');
 		mywindow.document.write('</head><body>');
 		mywindow.document.write('<h3>' + title + '</h3>');
+		mywindow.document.write('<h4>' + subtitle + '</h4>');
 		mywindow.document.write(document.getElementById(elem).innerHTML);
 		mywindow.document.write('</body></html>');
 		
