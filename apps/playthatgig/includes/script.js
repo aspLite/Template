@@ -3,7 +3,8 @@
     }
 
     function drag(ev) {
-        ev.dataTransfer.setData("text", ev.target.id);		
+        ev.dataTransfer.setData("text", ev.target.id);	
+		
     }
 
     function drop(ev) {
@@ -12,6 +13,9 @@
 
         thisdiv = ev.target;
         $(document.getElementById(data)).insertBefore(thisdiv);
+		
+		//console.log("source:" + data);	
+		//console.log("target:" + ev.target.id);	
 	
 		$('#iTargetID').val(ev.target.id);
 		$('#iDivID').val(data);
