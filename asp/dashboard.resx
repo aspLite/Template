@@ -20,6 +20,18 @@ function loadmodal(value,qs)
 	loadmodal=loadmodal & "return false;"
 end function
 
+function loadmodaliId(value,iId,qs)
+	loadmodaliId="modalAspForm ('dashboard','"
+	loadmodaliId=loadmodaliId & iId & "&customAppID=" & myApp.iId & "&custumAppPath=" & server.urlEncode(value) & "','" & qs & "');"
+	loadmodaliId=loadmodaliId & "return false;"
+end function
+
+function loadmodalXLiId(value,iId,qs)
+	loadmodalXLiId="modalAspFormXL ('dashboard','"
+	loadmodalXLiId=loadmodalXLiId & iId & "&customAppID=" & myApp.iId & "&custumAppPath=" & server.urlEncode(value) & "','" & qs & "');"
+	loadmodalXLiId=loadmodalXLiId & "return false;"
+end function
+
 if customAppID<>0 then
 
 	set myApp = new cls_app
