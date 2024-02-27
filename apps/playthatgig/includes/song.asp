@@ -131,7 +131,7 @@ class cls_songs
 		
 		Set list = aspL.dict
 	
-		dim sql : sql="select * from tblSong where bDeleted=false and iUserID=" & user.iId & " order by sTitle"
+		dim sql : sql="select * from tblSong where bDeleted=false and iUserID=" & user.iId & " order by sTitle asc"
 		
 		dim song, rs : set rs=dba.execute(sql)				
 		
@@ -156,7 +156,7 @@ end class
 function songRS
 	
 	dim sql : sql="select tblSong.iId, tblSong.sTitle, tblSong.sArtist from "
-	sql=sql & " tblSong where tblSong.bDeleted=false and tblSong.iUserID=" & user.iId
+	sql=sql & " tblSong where tblSong.bDeleted=false and tblSong.iUserID=" & user.iId & " order by sTitle asc"
 	
 	set songRS=dba.execute(sql)
 
