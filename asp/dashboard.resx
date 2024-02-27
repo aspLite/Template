@@ -6,6 +6,12 @@ dim myApp, appKey, myApps : set myApps=aspl.dict
 dim customAppID : customAppID=aspl.convertNmbr(aspl.getRequest("customAppID"))
 dim custumAppPath : custumAppPath=aspl.getRequest("custumAppPath")	
 
+function directlink(value,qs)
+	
+	directlink=getSiteUrl & "/?asplEvent=dashboard&customAppID=" & myApp.iId & "&custumAppPath=" & server.urlEncode(value) & qs
+
+end function
+
 function load(value,qs)
 	load="load('dashboard','dashboard','" & qs & "&customAppID=" & myApp.iId & "&custumAppPath=" & server.urlEncode(value) & "');return false;"
 end function
