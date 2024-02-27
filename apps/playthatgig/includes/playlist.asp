@@ -267,6 +267,79 @@ class cls_playlist
 	
 	end function	
 	
+	
+	public function html
+	
+		dim counter, records, song, songsCopy : set songsCopy=songs : records="" : counter=0
+
+		records="<h1>" & aspl.htmlEncode(sName) & " (" & songsCopy.count & " " & l("songs") & ")</h1>"
+		records=records & "<h3>" & aspl.htmlEncode(sDescription) & "</h3>"
+		
+		records=records & "<table border=""1"" cellpadding=""5"" cellspacing=""0"">"
+		records=records & "<thead>"
+		records=records & "<tr>"
+		records=records & "<th>N°</th>"
+		records=records & "<th>" & l("song") & "</th>"
+		records=records & "<th>Artist</th>"
+		records=records & "<th>" & l("comments") &"</th>"
+		records=records & "<th>Tuning</th>"
+		records=records & "<th>BPM</th>"		
+		records=records & "</tr>"		
+		records=records & "</thead>"
+		records=records & "<tbody>"
+		
+		
+		for each song in songsCopy
+			counter=counter+1	
+			records=records & "<tr>"
+			records=records & "<td>" & counter & "</td>"
+			records=records & "<td>" & aspl.htmlEncode(songsCopy(song).sTitle) & "</td>"
+			records=records & "<td>" & aspl.htmlEncode(songsCopy(song).sArtist) & "</td>"
+			records=records & "<td>" & aspl.htmlEncode(songsCopy(song).sComments) & "</td>"
+			records=records & "<td>" & aspl.htmlEncode(songsCopy(song).sTuning) & "</td>"
+			records=records & "<td>" & aspl.htmlEncode(songsCopy(song).sBPM) & "</td>"
+			records=records & "</tr>"
+
+		next
+		
+		records=records & "</tbody><table>"
+		
+		records=records & "<div style=""page-break-after: always;""></div>"
+
+		counter=0
+		for each song in songsCopy
+
+			counter=counter+1	
+			records=records & "<h2>" & counter & ". " & aspl.htmlEncode(songsCopy(song).sTitle) &" (" & aspl.htmlEncode(songsCopy(song).sArtist)  & ")</h2>"	
+			records=records & "<p>" & aspl.htmlEncode(songsCopy(song).sComments) 
+			records=records & "&nbsp;Tuning: " & aspl.htmlEncode(songsCopy(song).sTuning) 
+			records=records & "&nbsp;BPM: " & aspl.htmlEncode(songsCopy(song).sBPM)& "</p>"
+			records=records & "<pre>" & aspl.htmlEncode(songsCopy(song).sLyrics) & "</pre>"
+			
+		next
+		
+		set songsCopy=nothing
+				
+		dim cdomessage : set cdomessage=aspL.plugin("cdomessage")
+		records=cdomessage.wrapInHTML(records,sName)
+		set cdomessage=nothing
+		
+		html=records
+
+
+	end function
+
+	public sub mail
+	
+		dim cdomessage : set cdomessage=aspL.plugin("cdomessage")		
+		cdomessage.receiveremail=user.sEmail
+		cdomessage.subject=sName	
+		cdomessage.body=html
+		cdomessage.send
+		set cdomessage=nothing
+	
+	end sub
+	
 
 end class
 

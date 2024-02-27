@@ -32,6 +32,12 @@ if form.postback then
 			playlist.copy()
 			form.writejs loadInTarget("dashboard","playlist_manage.asp","&copied=1&iId=" & playlist.iId)
 			form.writejs "window.scrollTo(0, 0);"
+		end if	
+
+		if aspl.convertNmbr(form.request("doMail"))=1 then
+			playlist.mail()
+			aspl.addFB(l("mailsent"))
+			form.writejs "window.scrollTo(0, 0);"
 		end if			
 				
 		if aspl.convertNmbr(form.request("iDeleteID"))<>0 then
@@ -81,6 +87,12 @@ doCopy.add "value","0"
 doCopy.add "name","doCopy"
 doCopy.add "id","doCopy"
 
+dim doMail : set doMail=form.field("hidden")
+doMail.add "value","0"
+doMail.add "name","doMail"
+doMail.add "id","doMail"
+
+
 dim heading : heading=""
 heading=heading & "<div class=""container-fluid py-3"">"
 heading=heading & "<h1 class=""display-6 fw-bold"">" & aspl.htmlencode(playlist.sName) & " (" & songs.count & " songs)</h1>"
@@ -124,6 +136,16 @@ elseif songs.count>5 then
 	excel2.add "class","btn btn-success"
 	excel2.add "onclick",loadmodalXLiId("playlist_export.asp",playlist.iId,"")
 	
+	dim download2 : set download2 = form.field("button")
+	download2.add "html","Download"
+	download2.add "class","btn btn-info"
+	download2.add "onclick","location.assign('" & directlink("playlist_download.asp","&iId=" & playlist.iId)& "');"
+	
+	dim mail2 : set mail2 = form.field("button")
+	mail2.add "html",l("tomail")
+	mail2.add "class","btn btn-warning"
+	mail2.add "onclick","$('#doMail').val('1');$('#" & form.id & "').submit();return false;"
+	
 	form.newline
 	form.newline
 	
@@ -137,7 +159,7 @@ for each song in songs
 					
 				drag=drag & "<a  class=""link link-danger"" href=""#"" "
 				drag=drag & "onclick=""$('#iDeleteID').val('" & song & "');$('#" & form.id & "').submit();return false;"">"
-				drag=drag & "<span style=""width:50px"" class=""material-symbols-outlined icon"">delete</span></a>"		
+				drag=drag & "<span style=""width:30px"" class=""material-symbols-outlined icon"">delete</span></a>"		
 			
 		
 			drag=drag & "<strong><a class=""link link-primary"" href=""#"" "
@@ -157,7 +179,7 @@ for each song in songs
 			end if	
 
 			if not aspl.isEmpty(extra) then
-				drag=drag & "<br><span style=""margin-left:45px"">" & aspl.convertStr(extra) & "</span>"
+				drag=drag & "<span style=""margin-left:15px"">" & aspl.convertStr(extra) & "</span>"
 			end if
 			
 	
@@ -194,20 +216,18 @@ excel.add "html","Export"
 excel.add "class","btn btn-success"
 excel.add "onclick",loadmodalXLiId("playlist_export.asp",playlist.iId,"")
 
-'dim pdf : set pdf = form.field("button")
-'pdf.add "html","PDF"
-'pdf.add "class","btn btn-danger"
+dim download : set download = form.field("button")
+download.add "html","Download"
+download.add "class","btn btn-info"
+download.add "onclick","location.assign('" & directlink("playlist_download.asp","&iId=" & playlist.iId)& "');"
 
-'dim excel : set excel = form.field("button")
-'excel.add "html","Excel"
-'excel.add "class","btn btn-success"
+dim mail : set mail = form.field("button")
+mail.add "html",l("tomail")
+mail.add "class","btn btn-warning"
+mail.add "onclick","$('#doMail').val('1');$('#" & form.id & "').submit();return false;"
 
-'dim mail : set mail = form.field("button")
-'mail.add "html",l("tomail")
-'mail.add "class","btn btn-warning"
-
-	form.newline 
-	form.newline 
+form.newline 
+form.newline 
 
 
 dim allRS : set allRS=songRS
