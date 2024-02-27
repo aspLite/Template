@@ -10,6 +10,8 @@ playlist.pick(form.request("iId"))
 
 form.writejs modalLabel(l("addeditplaylist"))
 
+
+
 if form.postback then
 
 	'session securitycheck
@@ -35,8 +37,8 @@ if form.postback then
 				
 				aspl.addFB(l("changeshavebeensaved"))				
 				
-				if aspl.convertNmbr(form.request("fromManager"))=1 then
-					form.writejs loadInTarget("dashboard","playlist_manager.asp","&iId=" & playlist.iId)
+				if aspl.convertNmbr(form.request("fromManager"))=1 then				
+					form.writejs loadInTarget("dashboard","playlist_manage.asp","&iId=" & playlist.iId)
 				else
 					form.writejs loadInTarget("playlists","playlists.asp","")
 				end if
@@ -58,7 +60,7 @@ iId.add "value",playlist.iId
 iId.add "name","iId"
 
 dim fromManager : set fromManager=form.field("hidden")
-fromManager.add "value",form.request("fromManager")
+fromManager.add "value",aspl.convertNmbr(form.request("fromManager"))
 fromManager.add "name","fromManager"
 
 dim sName : set sName=form.field("text")
