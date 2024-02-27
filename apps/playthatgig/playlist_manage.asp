@@ -133,7 +133,7 @@ dim drag : drag="<div id=""draggable"" ondrop=""drop(event)"" ondragover=""allow
 
 for each song in songs
 	
-	drag=drag & "<div id=""" & song & """ class=""lead alert alert-warning"" draggable=""true"" style=""width:100%"" ondragstart=""drag(event)"">"
+	drag=drag & "<div id=""" & song & """ class=""lead alert alert-warning"" draggable=""true"" style=""cursor:move;width:100%"" ondragstart=""drag(event)"">"
 					
 				drag=drag & "<a  class=""link link-danger"" href=""#"" "
 				drag=drag & "onclick=""$('#iDeleteID').val('" & song & "');$('#" & form.id & "').submit();return false;"">"
@@ -144,15 +144,21 @@ for each song in songs
 			drag=drag & " onclick=""" & loadmodalXLiId("song_view.asp",songs(song).iId,"&fromManager=" & playlist.iId) & """>" 
 			drag=drag & aspl.htmlencode(songs(song).sTitle) & "</a></strong>"		
 			
+			dim extra : extra=""
+			
 			if not aspl.isEmpty(songs(song).sComments) then
-				drag=drag & "&nbsp;<small>" & l("comments") &": <strong>" & aspl.htmlencode(songs(song).sComments) & "</strong></small>"
+				extra=extra & "&nbsp;<small>" & l("comments") &": <strong>" & aspl.htmlencode(songs(song).sComments) & "</strong></small>"
 			end if
 			if not aspl.isEmpty(songs(song).sTuning) then
-				drag=drag & "&nbsp;<small>Tuning: <strong>" & aspl.htmlencode(songs(song).sTuning) & "</strong></small>"
+				extra=extra & "&nbsp;<small>T <strong>" & aspl.htmlencode(songs(song).sTuning) & "</strong></small>"
 			end if
 			if not aspl.isEmpty(songs(song).sBPM) then
-				drag=drag & "&nbsp;<small>BPM: <strong>" & aspl.htmlencode(songs(song).sBPM) & "</strong></small>"
-			end if		
+				extra=extra & "&nbsp;<small>B <strong>" & aspl.htmlencode(songs(song).sBPM) & "</strong></small>"
+			end if	
+
+			if not aspl.isEmpty(extra) then
+				drag=drag & "<br><span style=""margin-left:45px"">" & aspl.convertStr(extra) & "</span>"
+			end if
 			
 	
 	drag=drag & "</div>"
