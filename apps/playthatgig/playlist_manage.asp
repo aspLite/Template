@@ -147,7 +147,7 @@ for each song in songs
 			dim extra : extra=""
 			
 			if not aspl.isEmpty(songs(song).sComments) then
-				extra=extra & "&nbsp;<small>" & l("comments") &": <strong>" & aspl.htmlencode(songs(song).sComments) & "</strong></small>"
+				extra=extra & "&nbsp;<small><strong>" & aspl.htmlencode(songs(song).sComments) & "</strong></small>"
 			end if
 			if not aspl.isEmpty(songs(song).sTuning) then
 				extra=extra & "&nbsp;<small>T <strong>" & aspl.htmlencode(songs(song).sTuning) & "</strong></small>"
