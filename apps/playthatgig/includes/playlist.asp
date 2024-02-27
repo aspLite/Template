@@ -302,7 +302,7 @@ class cls_playlist
 
 		next
 		
-		records=records & "</tbody><table>"
+		records=records & "</tbody></table>"
 		
 		records=records & "<div style=""page-break-after: always;""></div>"
 
