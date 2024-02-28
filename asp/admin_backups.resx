@@ -4,7 +4,7 @@ user.checkifadmin
 
 dim form : set form=aspl.form
 
-form.writejs modalLabelXL(l("availablebackups") & " (" & l("recentfirst") & ")")
+form.writejs modalLabel(l("availablebackups") & " (" & l("recentfirst") & ")")
 
 dim file,folder : set folder=aspl.fso.getFolder(server.mappath("db/backup"))
 
@@ -22,7 +22,7 @@ for each file in folder.files
 
 		table=table & "<tr>"
 		table=table & "<td>" & file.datecreated & "</td>"
-		table=table & "<td><a href=""#"" onclick=""load('admin_backupdetail','modalformXL','&filepath=" & server.urlencode(file.name) & "');"">"
+		table=table & "<td><a href=""#"" onclick=""load('admin_backupdetail','modalform','&filepath=" & server.urlencode(file.name) & "');"">"
 		table=table & replace(file.name,".resx","",1,-1,1) & "</a></td>"
 		table=table & "<td>" & round(file.size/1024/1024,2) & "MB</td>"
 		table=table & "</tr>"

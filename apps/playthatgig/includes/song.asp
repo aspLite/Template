@@ -119,7 +119,51 @@ class cls_song
 		
 		if iId=0 then canBeDeleted=false
 	
-	end function	
+	end function
+
+	
+	public function drawLyrics	
+		
+		if not aspl.isEmpty(sLyrics) then
+		
+			dim line,i, arrL : arrL=split(sLyrics,vbcrlf)
+			
+			for i=lbound(arrL) to ubound(arrL)
+			
+				line=lcase(arrL(i))	
+				line=replace(line,vbtab," ",1,-1,1)
+				line=replace(line,"  "," ",1,-1,1)
+				line=trim(line)	
+
+				if instr(line,"page 4/")=0 and instr(line,"page 3/")=0 and instr(line,"page 2/")=0 and instr(line,"page 1/")=0 and instr(line,"----")=0 and instr(line,"    ")=0 and instr(line,"[chorus]")=0 and instr(line,"[intro]")=0 and instr(line,"[verse")=0 and instr(line,"[bridge]")=0 and instr(line,"[outro]")=0 and instr(line,"[interlude]")=0 and instr(line,"e|-")=0  and instr(line,"b|-")=0 and instr(line,"g|-")=0 and instr(line,"d|-")=0 and instr(line,"a|-")=0 then
+					
+					if line<>"dm7" and line<>"em7" and line<>"dsus4" and line<>"asus2" and line<>"gsus4" and line<>"b7" and line<>"a" and line<>"b" and line<>"c" and line<>"d" and line<>"e" and line<>"f" and line<>"g" and line<>"am" and line<>"bm" and line<>"cm" and line<>"dm" and line<>"em"  and line<>"fm"  and line<>"gm" and instr(line," b ")=0 and instr(line," c ")=0 and instr(line," d ")=0 and instr(line," e ")=0 and instr(line," f ")=0 and instr(line," g ")=0 and instr(line," bm ")=0 and instr(line," cm ")=0 and instr(line," dm ")=0 and instr(line," em ")=0 and instr(line," fm ")=0 and instr(line," gm ")=0 and instr(line," d7 ")=0 and instr(line," a7 ")=0 and instr(line," b7 ")=0 and instr(line," c7 ")=0  and instr(line," e7 ")=0  and instr(line," f7 ")=0  and instr(line," g7 ")=0 then
+
+						drawLyrics=drawLyrics & trim(arrL(i)) & vbcrlf
+					
+					end if
+					
+				end if			
+			
+			next		
+		
+		end if		
+		
+		drawLyrics=replace(drawLyrics,vbcrlf & vbcrlf & vbcrlf,vbcrlf & vbcrlf,1,-1,1)
+		drawLyrics=replace(drawLyrics,vbcrlf & vbcrlf & vbcrlf,vbcrlf & vbcrlf,1,-1,1)
+		drawLyrics=replace(drawLyrics,vbcrlf & vbcrlf & vbcrlf,vbcrlf & vbcrlf,1,-1,1)
+		
+		drawLyrics=trim(drawLyrics)
+		
+		while left(drawLyrics,1)=vbcrlf 
+			drawLyrics=right(drawLyrics,len(drawLyrics)-1)
+		wend
+		
+		while right(drawLyrics,1)=vbcrlf 
+			drawLyrics=left(drawLyrics,len(drawLyrics)-1)
+		wend
+
+	end function
 
 end class
 

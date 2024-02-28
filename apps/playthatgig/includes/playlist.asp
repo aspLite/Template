@@ -270,12 +270,13 @@ class cls_playlist
 	
 	public function html
 	
-		dim counter, records, song, songsCopy : set songsCopy=songs : records="" : counter=0
+		dim drawLyrics, counter, records, song, songsCopy : set songsCopy=songs : records="" : counter=0
 
 		records="<h1>" & aspl.htmlEncode(sName) & " (" & songsCopy.count & " " & l("songs") & ")</h1>"
 		records=records & "<h3>" & aspl.htmlEncode(sDescription) & "</h3>"
 		
-		records=records & "<table border=""1"" cellpadding=""5"" cellspacing=""0"">"
+		records=records & "<a name=""top""></a>"
+		records=records & "<table style=""font-family:Arial"" border=""1"" cellpadding=""5"" cellspacing=""0"">"
 		records=records & "<thead>"
 		records=records & "<tr>"
 		records=records & "<th>N°</th>"
@@ -293,7 +294,7 @@ class cls_playlist
 			counter=counter+1	
 			records=records & "<tr>"
 			records=records & "<td>" & counter & "</td>"
-			records=records & "<td>" & aspl.htmlEncode(songsCopy(song).sTitle) & "</td>"
+			records=records & "<td><a href=""#songID" & song & """>" & aspl.htmlEncode(songsCopy(song).sTitle) & "</a></td>"
 			records=records & "<td>" & aspl.htmlEncode(songsCopy(song).sArtist) & "</td>"
 			records=records & "<td>" & aspl.htmlEncode(songsCopy(song).sComments) & "</td>"
 			records=records & "<td>" & aspl.htmlEncode(songsCopy(song).sTuning) & "</td>"
@@ -310,11 +311,21 @@ class cls_playlist
 		for each song in songsCopy
 
 			counter=counter+1	
+			records=records & "<a name=""songID" & song & """ alt="""" href=""#""></a>"
+			records=records & "<div style=""font-family:Arial"">"
 			records=records & "<h2>" & counter & ". " & aspl.htmlEncode(songsCopy(song).sTitle) &" (" & aspl.htmlEncode(songsCopy(song).sArtist)  & ")</h2>"	
 			records=records & "<p>" & aspl.htmlEncode(songsCopy(song).sComments) 
 			records=records & "&nbsp;Tuning: " & aspl.htmlEncode(songsCopy(song).sTuning) 
-			records=records & "&nbsp;BPM: " & aspl.htmlEncode(songsCopy(song).sBPM)& "</p>"
+			records=records & "&nbsp;BPM: " & aspl.htmlEncode(songsCopy(song).sBPM)& "</p>"		
+
+			drawLyrics=br(aspl.htmlEncode(songsCopy(song).drawLyrics))
+			if not aspl.isEmpty(drawLyrics) then
+				records=records & "<div style=""background-color:#fffec8;padding:20px;"">" & drawLyrics  
+				records=records & "<br><a style=""border-radius:5px;color:#000000;text-decoration:none;background-color:#CCCCCC;margin-top:15px;padding:8px 14px 8px 14px"" href=""#top"">top</a></div>"
+			end if
+				
 			records=records & "<pre>" & aspl.htmlEncode(songsCopy(song).sLyrics) & "</pre>"
+			records=records & "<br><a style=""border-radius:5px;color:#000000;text-decoration:none;background-color:#CCCCCC;margin-top:15px;padding:8px 14px 8px 14px"" href=""#top"">top</a></div>"
 			
 		next
 		

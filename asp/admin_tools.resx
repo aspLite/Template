@@ -76,7 +76,7 @@ recycle.add "onclick","$('#adminType').val('recycle');"
 dim backups : set backups=form.field("button")
 backups.add "html",l("availablebackups")
 backups.add "class","btn btn-success"
-backups.add "onclick","modalAspFormXL ('admin_backups','','');"
+backups.add "onclick","modalAspForm ('admin_backups','','');"
 
 form.build()
 

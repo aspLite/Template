@@ -19,7 +19,7 @@ if form.postback then
 	dim back : set back=form.field("button")
 	back.add "html",l("back")
 	back.add "class", "btn btn-primary"
-	back.add "onclick","load('admin_backups','modalformXL','');"
+	back.add "onclick","load('admin_backups','modalform','');"
 		
 	form.build
 	
@@ -40,7 +40,7 @@ delete.add "class", "btn btn-danger"
 dim cancel : set cancel=form.field("button")
 cancel.add "html",l("cancel")
 cancel.add "class", "btn btn-secondary"
-cancel.add "onclick","load('admin_backupdetail','modalformXL','&filepath="&server.urlencode(filepath)&"');"
+cancel.add "onclick","load('admin_backupdetail','modalform','&filepath="&server.urlencode(filepath)&"');"
 
 form.build
 

@@ -10,6 +10,11 @@ edit.add "html",l("edit")
 edit.add "class","btn btn-primary"
 edit.add "onclick","$('#crmModalXL').modal('hide');" & loadmodaliId("song_edit.asp",song.iId,"&fromManager="& form.request("fromManager"))
 
+dim close : set close=form.field("button")
+close.add "html",l("close")
+close.add "class","btn btn-secondary"
+close.add "databsdismiss","modal"
+
 form.newline
 
 form.writejs modalLabelXL(song.sTitle & " (" & song.sArtist & ")")
@@ -29,7 +34,13 @@ if not aspl.isEmpty(extra) then
 end if
 
 if not aspl.isEmpty(song.sComments) then 
-	form.write "<div class=""alert alert-warning"">" & br(song.sComments) & "</div>"
+	form.write "<div class=""alert alert-danger"">" & br(song.sComments) & "</div>"
+end if
+
+'drawlyrics?
+dim drawlyrics : drawlyrics=song.drawlyrics
+if not aspl.isEmpty(drawlyrics) then 
+	form.write "<div class=""alert alert-warning"">" & br(drawlyrics) & "</div>"
 end if
 
 if not aspl.isEmpty(song.sLyrics) then 

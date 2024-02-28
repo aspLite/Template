@@ -244,8 +244,7 @@ table=table & "</thead>"
 while not allRS.eof
 
 	table=table & "<tr>"
-	table=table & "<td>" & aspl.htmlencode(aspl.convertStr(allRS("sTitle"))) & "</td>"
-	table=table & "<td>" & aspl.htmlencode(aspl.convertStr(allRS("sArtist"))) & "</td>"
+	
 	table=table & "<td style=""width:135px"">"
 	
 	if not songids.exists(aspl.convertNmbr(allRS("iId"))) then
@@ -259,7 +258,12 @@ while not allRS.eof
 	
 	end if
 	
-	table=table & "</td></tr>"	
+	table=table & "</td>"
+	
+	table=table & "<td>" & aspl.htmlencode(aspl.convertStr(allRS("sTitle"))) & "</td>"
+	table=table & "<td>" & aspl.htmlencode(aspl.convertStr(allRS("sArtist"))) & "</td>"	
+	
+	table=table & "</tr>"	
 	
 	allRS.movenext
 
