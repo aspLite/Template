@@ -11,7 +11,7 @@ dim table : table="<table id=""songtable"" class=""table table-striped"">"
 table=table & "<thead>"
 table=table & "<tr>"
 table=table & "<th>"&l("title")&"</th>"
-table=table & "<th>Artist</th>"
+table=table & "<th>"&l("artist")&"</th>"
 table=table & "</tr>"
 table=table & "</thead>"
 table=table & "<tbody>"
@@ -29,6 +29,9 @@ next
 
 table=table & "</tbody></table>"
 
-form.write table & datatable("songtable")
+dim dt : dt=datatable("songtable")
+dt=replace(dt," 10, 25,","",1,-1,1) 
+
+form.write table & dt
 
 %>

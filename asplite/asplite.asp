@@ -839,9 +839,22 @@ class cls_asplite
 		value=convertStr(value)
 	
 		removeTabs=replace(value,vbtab,"",1,-1,1)		
-		
 	
 	end function
+	
+	
+	function textOnly(value)
+
+		if not [isEmpty](value) then
+			textOnly=replace(value,vbtab,"",1,-1,1)
+			textOnly=replace(textOnly,vbcrlf,"",1,-1,1)
+			textOnly=trim(textOnly)
+		else
+			textOnly=""
+		end if
+
+	end function
+	
 
 	public function convertStr(value)
 

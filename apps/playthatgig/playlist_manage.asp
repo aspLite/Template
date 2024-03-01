@@ -19,6 +19,10 @@ if form.request("copied")="1" then
 	aspl.addFB(l("itemhasbeencopied"))
 end if
 
+if aspl.convertNmbr(form.request("iDeletedID"))<>0 then
+	playlist.deleteSong(form.request("iDeletedID"))
+end if		
+
 if form.postback then
 
 	'session securitycheck
@@ -40,10 +44,6 @@ if form.postback then
 			form.writejs "window.scrollTo(0, 0);"
 		end if			
 				
-		if aspl.convertNmbr(form.request("iDeleteID"))<>0 then
-			playlist.deleteSong(form.request("iDeleteID"))
-		end if		
-		
 		if aspl.convertNmbr(form.request("iDivID"))<>0 and aspl.convertNmbr(form.request("iTargetID"))<>0 then
 			playlist.setSort form.request("iDivID"),form.request("iTargetID")
 		end if
@@ -77,11 +77,6 @@ iDivID.add "value","0"
 iDivID.add "name","iDivID"
 iDivID.add "id","iDivID"
 
-dim iDeleteID : set iDeleteID=form.field("hidden")
-iDeleteID.add "value","0"
-iDeleteID.add "name","iDeleteID"
-iDeleteID.add "id","iDeleteID"
-
 dim doCopy : set doCopy=form.field("hidden")
 doCopy.add "value","0"
 doCopy.add "name","doCopy"
@@ -91,7 +86,6 @@ dim doMail : set doMail=form.field("hidden")
 doMail.add "value","0"
 doMail.add "name","doMail"
 doMail.add "id","doMail"
-
 
 dim heading : heading=""
 heading=heading & "<div class=""container-fluid py-3"">"
@@ -108,8 +102,7 @@ if songs.count=0 then
 	form.newline 
 	form.newline 
 
-elseif songs.count>5 then
-	
+elseif songs.count>5 then	
 
 	dim home2 : set home2=form.field("button")
 	home2.add "html",l("back")
@@ -119,17 +112,22 @@ elseif songs.count>5 then
 	dim edit2 : set edit2 = form.field("button")
 	edit2.add "html",l("edit")
 	edit2.add "class","btn btn-primary"
-	edit2.add "onclick",loadmodaliId("playlist_edit.asp",playlist.iId,"&fromManager=1")
+	edit2.add "onclick",loadmodaliId("playlist_edit.asp",playlist.iId,"&iPlayListID=" & playlist.iId)
 
 	dim copy2 : set copy2 = form.field("button")
 	copy2.add "html",l("copy")
 	copy2.add "class","btn btn-warning"
 	copy2.add "onclick","$('#doCopy').val('1');$('#" & form.id & "').submit();return false;"
+		
+	dim randomSort2 : set randomSort2 = form.field("button")
+	randomSort2.add "html","Random sort"
+	randomSort2.add "class","btn btn-dark"
+	randomSort2.add "onclick",loadmodaliId("playlist_randomsort.asp",playlist.iId,"")
 
 	dim delete2 : set delete2 = form.field("button")
 	delete2.add "html",l("delete")
 	delete2.add "class","btn btn-danger"
-	delete2.add "onclick",loadmodaliId("playlist_delete.asp",playlist.iId,"&fromManager=1")
+	delete2.add "onclick",loadmodaliId("playlist_delete.asp",playlist.iId,"&iPlayListID=" & playlist.iId)
 
 	dim excel2 : set excel2 = form.field("button")
 	excel2.add "html","Export"
@@ -137,7 +135,7 @@ elseif songs.count>5 then
 	excel2.add "onclick",loadmodalXLiId("playlist_export.asp",playlist.iId,"")
 	
 	dim download2 : set download2 = form.field("button")
-	download2.add "html","Download"
+	download2.add "html",l("download")
 	download2.add "class","btn btn-info"
 	download2.add "onclick","location.assign('" & directlink("playlist_download.asp","&iId=" & playlist.iId)& "');"
 	
@@ -155,33 +153,44 @@ dim drag : drag="<div id=""draggable"" ondrop=""drop(event)"" ondragover=""allow
 
 for each song in songs
 	
-	drag=drag & "<div id=""" & song & """ class=""lead alert alert-warning"" draggable=""true"" style=""cursor:move;width:100%"" ondragstart=""drag(event)"">"
-					
-				drag=drag & "<a  class=""link link-danger"" href=""#"" "
-				drag=drag & "onclick=""$('#iDeleteID').val('" & song & "');$('#" & form.id & "').submit();return false;"">"
-				drag=drag & "<span style=""width:30px"" class=""material-symbols-outlined icon"">delete</span></a>"		
-			
+	drag=drag & "<div class=""lead alert alert-warning""  style=""width:100%"">"
 		
-			drag=drag & "<strong><a class=""link link-primary"" href=""#"" "
-			drag=drag & " onclick=""" & loadmodalXLiId("song_view.asp",songs(song).iId,"&fromManager=" & playlist.iId) & """>" 
-			drag=drag & aspl.htmlencode(songs(song).sTitle) & "</a></strong>"		
+		drag=drag & "<div class=""row"">"
+	
+			drag=drag & "<div id=""" & song & """ draggable=""true"" class=""col"" "
+			drag=drag & "style=""max-width:50px;background-size:50px 50px;background-position:center;background-repeat:no-repeat;"
+			drag=drag & "background-image:url('" & myApp.sPath & "/includes/drag.png');cursor:move"" ondragstart=""drag(event)"">"
+			drag=drag & "</div>"		
 			
-			dim extra : extra=""
-			
-			if not aspl.isEmpty(songs(song).sComments) then
-				extra=extra & "&nbsp;<small><strong>" & aspl.htmlencode(songs(song).sComments) & "</strong></small>"
-			end if
-			if not aspl.isEmpty(songs(song).sTuning) then
-				extra=extra & "&nbsp;<small>T <strong>" & aspl.htmlencode(songs(song).sTuning) & "</strong></small>"
-			end if
-			if not aspl.isEmpty(songs(song).sBPM) then
-				extra=extra & "&nbsp;<small>B <strong>" & aspl.htmlencode(songs(song).sBPM) & "</strong></small>"
-			end if	
+			drag=drag & "<div class=""col"">"
+						
+				'drag=drag & "<a  class=""link link-danger"" href=""#"" "
+				'drag=drag & "onclick=""$('#iDeleteID').val('" & song & "');$('#" & form.id & "').submit();return false;"">"
+				'drag=drag & "<span style=""width:30px"" class=""material-symbols-outlined icon"">delete</span></a>"		
+				
+				drag=drag & "<strong><a class=""link link-primary"" href=""#"" "
+				drag=drag & " onclick=""" & loadmodalXLiId("song_view.asp",songs(song).iId,"&iLinkID=" & song &"&iPlaylistID=" & playlist.iId) & """>" 
+				drag=drag & aspl.htmlencode(songs(song).sTitle) & "</a></strong>"		
+				
+				dim extra : extra=""
+				
+				if not aspl.isEmpty(songs(song).sComments) then
+					extra=extra & "&nbsp;<small><strong>" & aspl.htmlencode(songs(song).sComments) & "</strong></small>"
+				end if
+				if not aspl.isEmpty(songs(song).sTuning) then
+					extra=extra & "&nbsp;<small>T <strong>" & aspl.htmlencode(songs(song).sTuning) & "</strong></small>"
+				end if
+				if not aspl.isEmpty(songs(song).sBPM) then
+					extra=extra & "&nbsp;<small>B <strong>" & aspl.htmlencode(songs(song).sBPM) & "</strong></small>"
+				end if	
 
-			if not aspl.isEmpty(extra) then
-				drag=drag & "<span style=""margin-left:15px"">" & aspl.convertStr(extra) & "</span>"
-			end if
+				if not aspl.isEmpty(extra) then
+					drag=drag & "<span style=""margin-left:15px"">" & aspl.convertStr(extra) & "</span>"
+				end if
 			
+			drag=drag & "</div>"
+		
+		drag=drag & "</div>"
 	
 	drag=drag & "</div>"
 next
@@ -199,17 +208,22 @@ home.add "onclick",load("","")
 dim edit : set edit = form.field("button")
 edit.add "html",l("edit")
 edit.add "class","btn btn-primary"
-edit.add "onclick",loadmodaliId("playlist_edit.asp",playlist.iId,"&fromManager=1")
+edit.add "onclick",loadmodaliId("playlist_edit.asp",playlist.iId,"&iPlayListID=" & playlist.iId)
 
 dim copy : set copy = form.field("button")
 copy.add "html",l("copy")
 copy.add "class","btn btn-warning"
 copy.add "onclick","$('#doCopy').val('1');$('#" & form.id & "').submit();return false;"
 
+dim randomSort : set randomSort = form.field("button")
+randomSort.add "html","Random sort"
+randomSort.add "class","btn btn-dark"
+randomSort.add "onclick",loadmodaliId("playlist_randomsort.asp",playlist.iId,"")
+
 dim delete : set delete = form.field("button")
 delete.add "html",l("delete")
 delete.add "class","btn btn-danger"
-delete.add "onclick",loadmodaliId("playlist_delete.asp",playlist.iId,"&fromManager=1")
+delete.add "onclick",loadmodaliId("playlist_delete.asp",playlist.iId,"&iPlayListID=" & playlist.iId)
 
 dim excel : set excel = form.field("button")
 excel.add "html","Export"
@@ -217,7 +231,7 @@ excel.add "class","btn btn-success"
 excel.add "onclick",loadmodalXLiId("playlist_export.asp",playlist.iId,"")
 
 dim download : set download = form.field("button")
-download.add "html","Download"
+download.add "html",l("download")
 download.add "class","btn btn-info"
 download.add "onclick","location.assign('" & directlink("playlist_download.asp","&iId=" & playlist.iId)& "');"
 

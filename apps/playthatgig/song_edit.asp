@@ -7,7 +7,7 @@ aspl(myApp.sPath & "/includes/begin.asp")
 dim bNew, song : set song=new cls_song : bNew=false
 song.pick(form.request("iId"))
 
-form.writejs modalLabel("Add/edit song")
+form.writejs modalLabel(l("addeditsong"))
 
 if form.postback then
 
@@ -27,9 +27,9 @@ if form.postback then
 			
 			aspl.addFB(l("changeshavebeensaved"))	
 			
-			if aspl.convertNmbr(form.request("fromManager"))<>0 then
+			if aspl.convertNmbr(form.request("iPlaylistID"))<>0 then
 			
-				form.writejs loadInTarget("dashboard","playlist_manage.asp","&iId=" & form.request("fromManager"))
+				form.writejs loadInTarget("dashboard","playlist_manage.asp","&iId=" & form.request("iPlaylistID"))
 			
 			else
 			
@@ -49,9 +49,9 @@ dim iId : set iId=form.field("hidden")
 iId.add "value",song.iId
 iId.add "name","iId"
 
-dim fromManager : set fromManager=form.field("hidden")
-fromManager.add "value",form.request("fromManager")
-fromManager.add "name","fromManager"
+dim iPlaylistID : set iPlaylistID=form.field("hidden")
+iPlaylistID.add "value",form.request("iPlaylistID")
+iPlaylistID.add "name","iPlaylistID"
 
 dim sTitle : set sTitle=form.field("text")
 sTitle.add "required",true
@@ -65,7 +65,7 @@ form.newline
 
 dim sArtist : set sArtist=form.field("text")
 sArtist.add "class","form-control"
-sArtist.add "label","Artist"
+sArtist.add "label",l("artist")
 sArtist.add "name","sArtist"
 sArtist.add "value",song.sArtist
 sArtist.add "maxlength",255
@@ -82,7 +82,7 @@ form.newline
 
 dim sLyrics : set sLyrics=form.field("textarea")
 sLyrics.add "class","form-control"
-sLyrics.add "label","Lyrics/Chords"
+sLyrics.add "label",l("lyricschords")
 sLyrics.add "name","sLyrics"
 sLyrics.add "value",song.sLyrics
 sLyrics.add "style","height:120px"
@@ -96,7 +96,7 @@ sTuning.add "value",song.sTuning
 sTuning.add "name","sTuning"
 sTuning.add "id","sTuning"
 sTuning.add "options",tuninglist.list
-sTuning.add "label","Tuning"
+sTuning.add "label",l("tuning")
 
 form.newline
 
@@ -124,14 +124,23 @@ if bNew then
 	addAnother.add "onclick",loadmodaliId("song_edit.asp","","")
 end if
 
-if song.canBeDeleted and aspl.convertNmbr(form.request("fromManager"))=0 then
+if song.canBeDeleted then
+	dim files : set files=form.field("button")
+	files.add "html",l("files")
+	files.add "class","btn btn-secondary"
+	files.add "container","span"
+	files.add "onclick",loadmodaliId("song_files.asp",song.iId,"")
+end if
+
+
+if song.canBeDeleted and aspl.convertNmbr(form.request("iPlaylistID"))=0 then
 
 	dim view : set view=form.field("button")
 	view.add "html",l("view")
 	view.add "class","btn btn-secondary"
 	view.add "container","span"
 	view.add "onclick","$('#crmModal').modal('hide');" & loadmodalXLiId("song_view.asp",song.iId,"")
-
+	
 	dim delete : set delete=form.field("button")
 	delete.add "html",l("Delete")
 	delete.add "class","btn btn-secondary"

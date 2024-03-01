@@ -109,6 +109,24 @@ class cls_song
 		if iId<>0 then
 		
 			remove=true
+			
+			'in alle playlists verwijderen!
+			dim rs : set rs=dba.execute("select iId, iPlaylistID from tblPlaylistSong where iSongID=" & iId)
+			
+			while not rs.eof
+			
+				dim playlist : set playlist=new cls_playlist
+				playlist.pick(aspl.convertNmbr(rs("iPlaylistID")))
+				playlist.deleteSong(aspl.convertNmbr(rs("iId")))
+				set playlist=nothing
+				
+				rs.movenext
+			
+			wend 
+			
+			set rs=nothing
+			
+			
 		end if
 		
 	end function
@@ -163,6 +181,33 @@ class cls_song
 			drawLyrics=left(drawLyrics,len(drawLyrics)-1)
 		wend
 
+	end function
+	
+	public function files
+	
+		dim songFile, sql
+	
+		set files=aspl.dict
+		
+		sql="select iId from tblSongFile "
+		sql=sql & " where iSongID=" & iId & " order by sFileName"
+		
+		dim rs : set rs=dba.execute(sql)
+		
+		while not rs.eof
+		
+			set songFile=new cls_songFile
+			songFile.pick(rs(0))
+			files.add songFile.iId, songFile
+			set songFile=nothing
+		
+			rs.movenext
+			
+		wend 
+		
+		set rs=nothing
+	
+	
 	end function
 
 end class

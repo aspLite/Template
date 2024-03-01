@@ -5,6 +5,6 @@ dim playlist : set playlist=new cls_playlist : playlist.pick (form.request("iId"
 'security
 if aspl.convertNmbr(playlist.iId)=0 then aspl.die
 
-aspl.saveAsFile playlist.sName & ".htm", playlist.html
+aspl.saveAsFile playlist.sName & ".htm", playlist.html(true)
 
 %>

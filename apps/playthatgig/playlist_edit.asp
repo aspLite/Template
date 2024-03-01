@@ -37,7 +37,7 @@ if form.postback then
 				
 				aspl.addFB(l("changeshavebeensaved"))				
 				
-				if aspl.convertNmbr(form.request("fromManager"))=1 then				
+				if aspl.convertNmbr(form.request("iPlayListID"))<>0 then				
 					form.writejs loadInTarget("dashboard","playlist_manage.asp","&iId=" & playlist.iId)
 				else
 					form.writejs loadInTarget("playlists","playlists.asp","")
@@ -59,9 +59,9 @@ dim iId : set iId=form.field("hidden")
 iId.add "value",playlist.iId
 iId.add "name","iId"
 
-dim fromManager : set fromManager=form.field("hidden")
-fromManager.add "value",aspl.convertNmbr(form.request("fromManager"))
-fromManager.add "name","fromManager"
+dim iPlayListID : set iPlayListID=form.field("hidden")
+iPlayListID.add "value",aspl.convertNmbr(form.request("iPlayListID"))
+iPlayListID.add "name","iPlayListID"
 
 dim sName : set sName=form.field("text")
 sName.add "required",true
@@ -86,7 +86,7 @@ submit.add "html",l("Save")
 submit.add "class","btn btn-primary"
 submit.add "container","span"
 
-if playlist.canBeDeleted and form.request("fromManager")<>"1" then
+if playlist.canBeDeleted and aspl.convertNmbr(form.request("iPlayListID"))=0 then
 
 	dim doCopy : set doCopy=form.field("hidden")
 	doCopy.add "value","0"

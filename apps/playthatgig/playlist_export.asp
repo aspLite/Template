@@ -5,7 +5,7 @@ dim playlist : set playlist=new cls_playlist : playlist.pick (form.request("iId"
 'security
 if aspl.convertNmbr(playlist.iId)=0 then form.write "no playlist selected" : aspl.die
 
-form.writejs modalLabelXL("Export playlist" & " " & aspl.htmlencjs(playlist.sName))
+form.writejs modalLabelXL("Export playlist" & " " & playlist.sName)
 
 dim table : table=aspl.loadText(myApp.sPath & "/includes/export.txt")
 

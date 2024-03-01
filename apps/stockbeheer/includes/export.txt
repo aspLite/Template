@@ -1,0 +1,45 @@
+<table class="table table-striped" id="exportTable">
+	<thead>
+		<tr>
+			<th>Product</th>	
+			<th>Eenheidsprijs €</th>
+			<th>Hoeveelheid</th>
+			<th>BTW</th>			
+			<th>Totaal (excl. BTW)</th>
+			<th>Totaal (incl. BTW)</th>				
+		</tr>		
+	</thead>
+	
+	<tbody>		
+		
+		[RECORDS]
+	
+	</tbody>
+	
+</table>
+
+<script>
+
+$(document).ready( function () {	
+
+	var d=new Date(document.getElementById('printDate').value)	
+	
+	var printDate=d.getDate() + '-' + (d.getMonth()+1) + '-' + d.getFullYear();	
+
+	document.title='Stockbeheer Orthodontie Hilde Joachum BV ' + printDate.toString();
+
+	$('#exportTable').DataTable( {	
+		lengthChange: false,
+		paging: false,
+		searching: false,
+		"lengthMenu": [ 1000 ],
+		"dom": 'Blfrtip',	
+		 buttons: ['copy', 'excel', 'csv', 'pdf', 'print'],
+		"order": [],
+		"responsive": false,
+		"serverSide": false
+	} );
+		
+});
+
+</script>

@@ -160,6 +160,29 @@ class cls_playlist
 		
 	end function
 	
+	public sub randomize
+	
+		dim rs : set rs=dba.RS
+		rs.open "select iSort, iId from tblPlaylistSong where iPlaylistID=" & iId & " order by Rnd(-Timer() * [iId]) Asc"
+				
+		dim counter : counter=1		
+		while not rs.eof	
+			
+			rs("iSort")=counter	
+			rs.update()
+			
+			rs.movenext
+			counter=counter+1
+			
+		wend
+		
+		rs.close
+		
+		set rs=nothing	
+	
+	end sub
+	
+	
 	public property get songCount
 		
 		dim rs : set rs=dba.execute("select count(iId) from tblPlaylistSong where iPlaylistID=" & iId)
@@ -268,7 +291,7 @@ class cls_playlist
 	end function	
 	
 	
-	public function html
+	public function html(includeJS)
 	
 		dim drawLyrics, counter, records, song, songsCopy : set songsCopy=songs : records="" : counter=0
 
@@ -281,9 +304,9 @@ class cls_playlist
 		records=records & "<tr>"
 		records=records & "<th>N°</th>"
 		records=records & "<th>" & l("song") & "</th>"
-		records=records & "<th>Artist</th>"
+		records=records & "<th>"  & l("artist") & "</th>"
 		records=records & "<th>" & l("comments") &"</th>"
-		records=records & "<th>Tuning</th>"
+		records=records & "<th>" & l("tuning") & "</th>"
 		records=records & "<th>BPM</th>"		
 		records=records & "</tr>"		
 		records=records & "</thead>"
@@ -294,7 +317,7 @@ class cls_playlist
 			counter=counter+1	
 			records=records & "<tr>"
 			records=records & "<td>" & counter & "</td>"
-			records=records & "<td><a href=""#songID" & song & """>" & aspl.htmlEncode(songsCopy(song).sTitle) & "</a></td>"
+			records=records & "<td><a href=""#songID" & counter & """>" & aspl.htmlEncode(songsCopy(song).sTitle) & "</a></td>"
 			records=records & "<td>" & aspl.htmlEncode(songsCopy(song).sArtist) & "</td>"
 			records=records & "<td>" & aspl.htmlEncode(songsCopy(song).sComments) & "</td>"
 			records=records & "<td>" & aspl.htmlEncode(songsCopy(song).sTuning) & "</td>"
@@ -308,24 +331,74 @@ class cls_playlist
 		records=records & "<div style=""page-break-after: always;""></div>"
 
 		counter=0
-		for each song in songsCopy
-
+		for each song in songsCopy		
+		
 			counter=counter+1	
-			records=records & "<a name=""songID" & song & """ alt="""" href=""#""></a>"
+			
+			records=records & "<a name=""songID" & counter & """ alt="""" href=""#""></a>"						
 			records=records & "<div style=""font-family:Arial"">"
 			records=records & "<h2>" & counter & ". " & aspl.htmlEncode(songsCopy(song).sTitle) &" (" & aspl.htmlEncode(songsCopy(song).sArtist)  & ")</h2>"	
-			records=records & "<p>" & aspl.htmlEncode(songsCopy(song).sComments) 
-			records=records & "&nbsp;Tuning: " & aspl.htmlEncode(songsCopy(song).sTuning) 
-			records=records & "&nbsp;BPM: " & aspl.htmlEncode(songsCopy(song).sBPM)& "</p>"		
+						
+			if includeJS then
+				records=records & "<p><button class=""autoscroll"" style=""font-size:16px;border-style:none;background-color:darkred;color:#FFF;padding:8px 14px 8px 14px;border-radius:5px;margin-right:5px"" "
+				records=records & "onclick=""scrollpage(this);return false;"" href=""#"">Autoscroll</button>"
+				records=records & "<button onclick=""scrollStarted=0;clearInterval(intervalId);intervalTimeout=intervalTimeout+25;scrollpage(this);return false;"" style=""visibility:hidden;font-size:16px;border-style:none;background-color:darkred;color:#FFF;padding:8px 18px 8px 18px;border-radius:5px;margin-right:5px"" class=""tweak"">-</button>"
+				records=records & "<button onclick=""scrollStarted=0;clearInterval(intervalId);intervalTimeout=intervalTimeout-25;scrollpage(this);return false;"" style=""visibility:hidden;font-size:16px;border-style:none;background-color:darkred;color:#FFF;padding:8px 18px 8px 18px;border-radius:5px;"" class=""tweak"">+</button></p>"
+			end if
+			
+			records=records & "<p>"			
+			
+			records=records & aspl.htmlEncode(songsCopy(song).sComments) 
+			
+			if not aspl.isEmpty(songsCopy(song).sTuning) then
+				records=records & "&nbsp;" & l("tuning") & ": " & aspl.htmlEncode(songsCopy(song).sTuning) 
+			end if
+			if not aspl.isEmpty(songsCopy(song).sBPM) then
+				records=records & "&nbsp;BPM: " & aspl.htmlEncode(songsCopy(song).sBPM)
+			end if
+			
+			records=records & "</p>"	
+			
+			'song files
+			dim songfile,songfiles : set songfiles=songsCopy(song).files
+			
+			if songfiles.count>0 then
+			
+				records=records & "<p style=""line-height:40px"">"
+				
+				for each songfile in songfiles
+					records=records & "<span style=""background-color:orange;padding:8px 14px 8px 14px;border-radius:5px;margin-top:20px;margin-right:10px""><a style=""color:#FFFFFF;text-decoration:none;"" href=""" & directlink("song_filedownload.asp","&iId=" & songfile) & """>" & aspl.htmlEncode(songfiles(songfile).sFilename) & "</a></span>"
+				next
+				
+				records=records & "</p>"
+				
+			end if			
 
 			drawLyrics=br(aspl.htmlEncode(songsCopy(song).drawLyrics))
+			
 			if not aspl.isEmpty(drawLyrics) then
-				records=records & "<div style=""background-color:#fffec8;padding:20px;"">" & drawLyrics  
-				records=records & "<br><a style=""border-radius:5px;color:#000000;text-decoration:none;background-color:#CCCCCC;margin-top:15px;padding:8px 14px 8px 14px"" href=""#top"">top</a></div>"
+				records=records & "<div style=""border-radius:5px;background-color:#fffec8;padding:20px;font-size:16px;"">" & drawLyrics  
+				records=records & "<p><a style=""border-radius:5px;color:#000000;text-decoration:none;background-color:#CCCCCC;margin-top:15px;padding:8px 14px 8px 14px"" href=""#top"">top</a>"
+				if counter<songsCopy.count then
+					records=records & "<a style=""border-radius:5px;color:#FFFFFF;text-decoration:none;background-color:blue;margin-left:5px;margin-top:15px;padding:8px 14px 8px 14px"" href=""#songID"&counter+1&""">" & l("next") & "</a>"
+				end if				
+				records=records & "</p></div>"
 			end if
-				
-			records=records & "<pre>" & aspl.htmlEncode(songsCopy(song).sLyrics) & "</pre>"
-			records=records & "<br><a style=""border-radius:5px;color:#000000;text-decoration:none;background-color:#CCCCCC;margin-top:15px;padding:8px 14px 8px 14px"" href=""#top"">top</a></div>"
+			
+			if not aspl.isEmpty(songsCopy(song).sLyrics) then				
+				records=records & "<pre style=""border-radius:5px;background-color:#F8F9FA;padding:20px;"">" & aspl.htmlEncode(songsCopy(song).sLyrics) & "</pre>"
+			end if
+			
+			records=records & "<p>"
+			records=records & "<a style=""border-radius:5px;color:#000000;text-decoration:none;background-color:#CCCCCC;margin-top:15px;padding:8px 14px 8px 14px"" href=""#top"">top</a>"
+			
+			if counter<songsCopy.count then
+				records=records & "<a style=""border-radius:5px;color:#FFFFFF;text-decoration:none;background-color:blue;margin-left:5px;margin-top:15px;padding:8px 14px 8px 14px"" href=""#songID"&counter+1&""">" & l("next") & "</a>"
+			end if
+			
+			records=records & "</p>"
+						
+			records=records & "</div>"
 			
 		next
 		
@@ -335,6 +408,10 @@ class cls_playlist
 		records=cdomessage.wrapInHTML(records,sName)
 		set cdomessage=nothing
 		
+		if includeJS then
+			records=replace(records,"</head>","<script>" & vbcrlf & aspl.loadText(myApp.sPath & "/includes/scroll.js") & vbcrlf & "</script>" & vbcrlf & "</head>",1,-1,1)
+		end if		
+				
 		html=records
 
 
@@ -345,7 +422,7 @@ class cls_playlist
 		dim cdomessage : set cdomessage=aspL.plugin("cdomessage")		
 		cdomessage.receiveremail=user.sEmail
 		cdomessage.subject=sName	
-		cdomessage.body=html
+		cdomessage.body=html(false)
 		cdomessage.send
 		set cdomessage=nothing
 	

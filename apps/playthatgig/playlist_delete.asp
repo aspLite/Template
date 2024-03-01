@@ -20,7 +20,7 @@ if form.postback then
 			
 			aspl.addFB(l("itemdeleted"))
 			
-			if aspl.convertNmbr(form.request("fromManager"))=1 then
+			if aspl.convertNmbr(form.request("iPlayListID"))<>0 then
 				form.writejs "setTimeout(function(){$('#crmModal').modal('hide');" & load("","") & "},1600);"
 			else
 				form.writejs loadInTarget("playlists","playlists.asp","")
@@ -39,9 +39,9 @@ dim iId : set iId=form.field("hidden")
 iId.add "value",playlist.iId
 iId.add "name","iId"
 
-dim fromManager : set fromManager=form.field("hidden")
-fromManager.add "value",form.request("fromManager")
-fromManager.add "name","fromManager"
+dim iPlayListID : set iPlayListID=form.field("hidden")
+iPlayListID.add "value",form.request("iPlayListID")
+iPlayListID.add "name","iPlayListID"
 
 aspl.addWarning(l("deletecmd") & " <b>" & server.htmlencode(playlist.sName) & "</b>?")
 
@@ -55,7 +55,7 @@ cancel.add "html",l("cancel")
 cancel.add "class","btn btn-secondary"
 cancel.add "container","span"
 
-if aspl.convertNmbr(form.request("fromManager"))=1 then
+if aspl.convertNmbr(form.request("iPlayListID"))<>0 then
 	cancel.add "databsdismiss","modal"
 else
 	cancel.add "onclick",loadmodaliId("playlist_edit.asp",playlist.iId,"")
