@@ -342,8 +342,8 @@ class cls_playlist
 			if includeJS then
 				records=records & "<p><button class=""autoscroll"" style=""font-size:16px;border-style:none;background-color:darkred;color:#FFF;padding:8px 14px 8px 14px;border-radius:5px;margin-right:5px"" "
 				records=records & "onclick=""scrollpage(this);return false;"" href=""#"">Autoscroll</button>"
-				records=records & "<button onclick=""scrollStarted=0;clearInterval(intervalId);intervalTimeout=intervalTimeout+25;scrollpage(this);return false;"" style=""visibility:hidden;font-size:16px;border-style:none;background-color:darkred;color:#FFF;padding:8px 18px 8px 18px;border-radius:5px;margin-right:5px"" class=""tweak"">-</button>"
-				records=records & "<button onclick=""scrollStarted=0;clearInterval(intervalId);intervalTimeout=intervalTimeout-25;scrollpage(this);return false;"" style=""visibility:hidden;font-size:16px;border-style:none;background-color:darkred;color:#FFF;padding:8px 18px 8px 18px;border-radius:5px;"" class=""tweak"">+</button></p>"
+				records=records & "<button onclick=""scrollStarted=0;clearInterval(intervalId);intervalTimeout=intervalTimeout+50;scrollpage(this);return false;"" style=""visibility:hidden;font-size:16px;border-style:none;background-color:darkred;color:#FFF;padding:8px 18px 8px 18px;border-radius:5px;margin-right:5px"" class=""tweak"">-</button>"
+				records=records & "<button onclick=""scrollStarted=0;clearInterval(intervalId);intervalTimeout=intervalTimeout-50;scrollpage(this);return false;"" style=""visibility:hidden;font-size:16px;border-style:none;background-color:darkred;color:#FFF;padding:8px 18px 8px 18px;border-radius:5px;"" class=""tweak"">+</button></p>"
 			end if
 			
 			records=records & "<p>"			
@@ -407,6 +407,8 @@ class cls_playlist
 		dim cdomessage : set cdomessage=aspL.plugin("cdomessage")
 		records=cdomessage.wrapInHTML(records,sName)
 		set cdomessage=nothing
+		
+		records=replace(records,"<body>","<body style=""font-family:Arial;font-size:16px"">",1,-1,1)
 		
 		if includeJS then
 			records=replace(records,"</head>","<script>" & vbcrlf & aspl.loadText(myApp.sPath & "/includes/scroll.js") & vbcrlf & "</script>" & vbcrlf & "</head>",1,-1,1)

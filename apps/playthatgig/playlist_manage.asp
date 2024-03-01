@@ -134,6 +134,8 @@ elseif songs.count>5 then
 	excel2.add "class","btn btn-success"
 	excel2.add "onclick",loadmodalXLiId("playlist_export.asp",playlist.iId,"")
 	
+	form.write "<a style=""margin-right:7px;margin-bottom:7px"" href=""" & directlink("playlist_golive.asp","&iId=" &playlist.iId) & """ target=""_blank"" class=""btn btn-primary"">Go live <span class=""spinner-grow spinner-grow-sm"" role=""status"" aria-hidden=""true""></span></a>"
+	
 	dim download2 : set download2 = form.field("button")
 	download2.add "html",l("download")
 	download2.add "class","btn btn-info"
@@ -229,6 +231,8 @@ dim excel : set excel = form.field("button")
 excel.add "html","Export"
 excel.add "class","btn btn-success"
 excel.add "onclick",loadmodalXLiId("playlist_export.asp",playlist.iId,"")
+
+form.write "<a style=""margin-right:7px;margin-bottom:7px"" href=""" & directlink("playlist_golive.asp","&iId=" &playlist.iId) & """ target=""_blank"" class=""btn btn-primary"">Go live <span class=""spinner-grow spinner-grow-sm"" role=""status"" aria-hidden=""true""></span></a>"
 
 dim download : set download = form.field("button")
 download.add "html",l("download")

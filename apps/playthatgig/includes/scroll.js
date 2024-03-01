@@ -6,7 +6,7 @@ var buttons;
 
 function scrollpage(el) {
 	
-	if (intervalTimeout<50) {intervalTimeout=50};
+	if (intervalTimeout<20) {intervalTimeout=20};
 	if (intervalTimeout>200) {intervalTimeout=200};
 	
 	if (scrollStarted==1){
