@@ -1,13 +1,13 @@
 var scrollStarted=0;
 var intervalId;
 var scrollDistance = 1;
-var intervalTimeout=130;
+var intervalTimeout=150;
 var buttons;
 
 function scrollpage(el) {
 	
-	if (intervalTimeout<20) {intervalTimeout=20};
-	if (intervalTimeout>200) {intervalTimeout=200};
+	if (intervalTimeout<10) {intervalTimeout=10};
+	if (intervalTimeout>250) {intervalTimeout=250};
 	
 	if (scrollStarted==1){
 		

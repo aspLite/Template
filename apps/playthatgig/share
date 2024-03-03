@@ -1,0 +1,13 @@
+<%
+aspl(myApp.sPath & "/includes/begin.asp")
+
+'security omzeilen
+user.iId=dba.execute("select iUserID from tblPlaylist where iId=" & aspl.convertNmbr(form.request("iId")))(0)
+
+dim playlist : set playlist=new cls_playlist : playlist.pick (form.request("iId"))
+'security
+if aspl.convertNmbr(playlist.iId)=0 or playlist.sToken<>form.request("sToken") then aspl.die
+
+aspl.dump playlist.html(true)
+
+%>

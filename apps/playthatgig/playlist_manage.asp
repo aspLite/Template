@@ -49,10 +49,12 @@ if form.postback then
 		end if
 		
 	end if
-	
+
+else
+	form.writejs "window.scrollTo(0, 0);"
 end if
 
-dim songs : set songs=playlist.songs
+dim songs : set songs=playlist.songsFast
 dim songids : set songids=playlist.songids
 
 'hidden field
@@ -141,6 +143,11 @@ elseif songs.count>5 then
 	download2.add "class","btn btn-info"
 	download2.add "onclick","location.assign('" & directlink("playlist_download.asp","&iId=" & playlist.iId)& "');"
 	
+	dim share2 : set share2=form.field("button")
+	share2.add "html","Share"
+	share2.add "class","btn btn-secondary"
+	share2.add "onclick","window.prompt(""Copy to clipboard: Ctrl+C, Enter"", '" & playlist.getToken & "');"
+	
 	dim mail2 : set mail2 = form.field("button")
 	mail2.add "html",l("tomail")
 	mail2.add "class","btn btn-warning"
@@ -201,7 +208,6 @@ drag=drag & "</div>"
 
 form.write drag
 
-
 dim home : set home=form.field("button")
 home.add "html",l("back")
 home.add "class","btn btn-secondary"
@@ -239,14 +245,18 @@ download.add "html",l("download")
 download.add "class","btn btn-info"
 download.add "onclick","location.assign('" & directlink("playlist_download.asp","&iId=" & playlist.iId)& "');"
 
+dim share : set share=form.field("button")
+share.add "html","Share"
+share.add "class","btn btn-secondary"
+share.add "onclick","window.prompt(""Copy to clipboard: Ctrl+C, Enter"", '" & playlist.getToken & "');"
+
 dim mail : set mail = form.field("button")
 mail.add "html",l("tomail")
 mail.add "class","btn btn-warning"
 mail.add "onclick","$('#doMail').val('1');$('#" & form.id & "').submit();return false;"
 
 form.newline 
-form.newline 
-
+form.newline
 
 dim allRS : set allRS=songRS
 dim table : table="<table id=""newsongs"" class=""table table-striped"">"

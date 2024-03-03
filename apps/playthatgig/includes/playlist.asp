@@ -1,7 +1,7 @@
 <%
 class cls_playlist
 
-	Public iId, sName, sDescription, iUserID, dUpdatedTS, bDeleted
+	Public iId, sName, sDescription, iUserID, dUpdatedTS, bDeleted, sToken
 	
 	Private Sub Class_Initialize		
 		iId=0	
@@ -38,6 +38,7 @@ class cls_playlist
 				sDescription		= rs("sDescription")
 				dUpdatedTS			= rs("dUpdatedTS")
 				bDeleted			= rs("bDeleted")
+				sToken				= rs("sToken")
 	
 			end if
 			
@@ -60,8 +61,9 @@ class cls_playlist
 		dim rs : set rs = dba.rs		
 		
 		if iId=0 then			
-			rs.Open "select * from tblPlaylist where 1=2"
-			rs.AddNew			
+			rs.Open "select * from tblPlaylist where 1=2"			
+			rs.AddNew
+			rs("sToken")			= aspl.randomizer.CreateGUID(10)			
 		else
 			rs.Open "select * from tblPlaylist where bDeleted=false and iUserID=" & user.iId & " and iId="& iId
 		end if
@@ -81,6 +83,21 @@ class cls_playlist
 		Set rs = nothing		
 		
 	end function
+	
+	
+	public property get getToken
+	
+		if aspl.isEmpty(sToken) then
+		
+			sToken=aspl.randomizer.CreateGUID(10)	
+		
+			dba.execute("update tblPlaylist set sToken='" & aspl.sqli(sToken) & "' where iId=" & iId)
+		
+		end if
+		
+		getToken=directlink("share","&sToken=" & sToken & "&iId=" & iId)
+	
+	end property
 	
 	
 	public function remove
@@ -214,6 +231,41 @@ class cls_playlist
 		
 	end function
 	
+	public function songsFast
+	
+		Set songsFast = aspL.dict
+	
+		dim sql
+		sql="select tblSong.sTitle, tblSong.sComments, tblSong.sTuning, tblSong.sBPM, tblPlaylistSong.iId, tblPlaylistSong.iSongID "
+		sql=sql & " from tblPlaylistSong inner join tblSong on tblPlaylistSong.iSongID=tblSong.iId "
+		sql=sql & " where tblPlaylistSong.iPlaylistID=" & iId
+		sql=sql & " order by tblPlaylistSong.iSort asc"
+		
+		dim song, rs : set rs=dba.execute(sql)				
+		
+		while not rs.eof			
+		
+			set song=new cls_song
+			
+			song.iId		 	= rs("iSongID")
+			song.sTitle		 	= rs("sTitle")
+			song.sComments		= rs("sComments")
+			song.sBPM		 	= rs("sBPM")
+			song.sTitle		 	= rs("sTitle")
+			song.sTuning		 = rs("sTuning")
+		
+			songsFast.add aspl.convertNmbr(rs("iId")),song
+			
+			set song=nothing
+		
+			rs.movenext
+			
+		wend 
+		
+		set rs=nothing	
+		
+	end function
+	
 	
 	public function addSong(songID)
 	
@@ -290,6 +342,29 @@ class cls_playlist
 	
 	end function	
 	
+	private function scroller
+	
+		scroller="<button class=""autoscroll"" style=""font-size:16px;border-style:none;background-color:#DC3545;color:#FFF;padding:8px 14px 8px 14px;border-radius:6px;margin-right:5px"" "
+		scroller=scroller & "onclick=""scrollpage(this);return false;"" href=""#"">Autoscroll</button>"
+		scroller=scroller & "<button onclick=""scrollStarted=0;clearInterval(intervalId);intervalTimeout=intervalTimeout+25;scrollpage(this);return false;"" style=""visibility:hidden;font-size:16px;border-style:none;background-color:#DC3545;color:#FFF;padding:8px 18px 8px 18px;border-radius:6px;margin-right:5px"" class=""tweak"">-</button>"
+		scroller=scroller & "<button onclick=""scrollStarted=0;clearInterval(intervalId);intervalTimeout=intervalTimeout-25;scrollpage(this);return false;"" style=""visibility:hidden;font-size:16px;border-style:none;background-color:#DC3545;color:#FFF;padding:8px 18px 8px 18px;border-radius:6px;"" class=""tweak"">+</button>"
+	
+	end function
+	
+	
+	private function nav(counter,includeJS)
+	
+			nav="<p>"			
+			nav=nav & "<a style=""border-radius:6px;color:#FFFFFF;text-decoration:none;background-color:#0B5ED7;margin-right:10px;margin-top:15px;padding:8px 14px 8px 14px"" href=""#songID"&counter+1&""">" & l("next") & "</a>"
+			nav=nav & "<a style=""border-radius:6px;color:#000000;text-decoration:none;background-color:#FFC107;margin-right:10px;margin-top:15px;padding:8px 14px 8px 14px"" href=""#top"">Top</a>"
+
+			if includeJS then
+				nav=nav &  "<span>" & scroller & "</span>"
+			end if
+			
+			nav=nav & "</p>"
+	
+	end function
 	
 	public function html(includeJS)
 	
@@ -323,7 +398,6 @@ class cls_playlist
 			records=records & "<td>" & aspl.htmlEncode(songsCopy(song).sTuning) & "</td>"
 			records=records & "<td>" & aspl.htmlEncode(songsCopy(song).sBPM) & "</td>"
 			records=records & "</tr>"
-
 		next
 		
 		records=records & "</tbody></table>"
@@ -336,25 +410,22 @@ class cls_playlist
 			counter=counter+1	
 			
 			records=records & "<a name=""songID" & counter & """ alt="""" href=""#""></a>"						
-			records=records & "<div style=""font-family:Arial"">"
+			records=records & "<div>"
 			records=records & "<h2>" & counter & ". " & aspl.htmlEncode(songsCopy(song).sTitle) &" (" & aspl.htmlEncode(songsCopy(song).sArtist)  & ")</h2>"	
 						
-			if includeJS then
-				records=records & "<p><button class=""autoscroll"" style=""font-size:16px;border-style:none;background-color:darkred;color:#FFF;padding:8px 14px 8px 14px;border-radius:5px;margin-right:5px"" "
-				records=records & "onclick=""scrollpage(this);return false;"" href=""#"">Autoscroll</button>"
-				records=records & "<button onclick=""scrollStarted=0;clearInterval(intervalId);intervalTimeout=intervalTimeout+50;scrollpage(this);return false;"" style=""visibility:hidden;font-size:16px;border-style:none;background-color:darkred;color:#FFF;padding:8px 18px 8px 18px;border-radius:5px;margin-right:5px"" class=""tweak"">-</button>"
-				records=records & "<button onclick=""scrollStarted=0;clearInterval(intervalId);intervalTimeout=intervalTimeout-50;scrollpage(this);return false;"" style=""visibility:hidden;font-size:16px;border-style:none;background-color:darkred;color:#FFF;padding:8px 18px 8px 18px;border-radius:5px;"" class=""tweak"">+</button></p>"
-			end if
+			'#################### nav
+			records=records & nav(counter,includeJS)
+			'#################### end nav
 			
-			records=records & "<p>"			
+			records=records & "<p style=""background-color:#F8D7DA;padding:10px;border-radius:6px"">"			
 			
 			records=records & aspl.htmlEncode(songsCopy(song).sComments) 
 			
 			if not aspl.isEmpty(songsCopy(song).sTuning) then
-				records=records & "&nbsp;" & l("tuning") & ": " & aspl.htmlEncode(songsCopy(song).sTuning) 
+				records=records & "&nbsp;" & l("tuning") & ": <strong>" & aspl.htmlEncode(songsCopy(song).sTuning)  & "</strong>"
 			end if
 			if not aspl.isEmpty(songsCopy(song).sBPM) then
-				records=records & "&nbsp;BPM: " & aspl.htmlEncode(songsCopy(song).sBPM)
+				records=records & "&nbsp;BPM: <strong>" & aspl.htmlEncode(songsCopy(song).sBPM)& "</strong>"
 			end if
 			
 			records=records & "</p>"	
@@ -362,12 +433,14 @@ class cls_playlist
 			'song files
 			dim songfile,songfiles : set songfiles=songsCopy(song).files
 			
-			if songfiles.count>0 then
+			if songfiles.count>0 and sec.autologin then
 			
 				records=records & "<p style=""line-height:40px"">"
 				
 				for each songfile in songfiles
-					records=records & "<span style=""background-color:orange;padding:8px 14px 8px 14px;border-radius:5px;margin-top:20px;margin-right:10px""><a style=""color:#FFFFFF;text-decoration:none;"" href=""" & directlink("song_filedownload.asp","&iId=" & songfile) & """>" & aspl.htmlEncode(songfiles(songfile).sFilename) & "</a></span>"
+					records=records & "<span style=""background-color:#0DCAF0;padding:8px 14px 8px 14px;border-radius:6px;margin-top:20px;margin-right:10px"">"
+					records=records & "<a style=""color:#000000;text-decoration:none;"" href=""" & directlink("song_filedownload.asp","&iId=" & songfile) & """>"
+					records=records & aspl.htmlEncode(songfiles(songfile).sFilename) & "</a></span>"
 				next
 				
 				records=records & "</p>"
@@ -377,26 +450,16 @@ class cls_playlist
 			drawLyrics=br(aspl.htmlEncode(songsCopy(song).drawLyrics))
 			
 			if not aspl.isEmpty(drawLyrics) then
-				records=records & "<div style=""border-radius:5px;background-color:#fffec8;padding:20px;font-size:16px;"">" & drawLyrics  
-				records=records & "<p><a style=""border-radius:5px;color:#000000;text-decoration:none;background-color:#CCCCCC;margin-top:15px;padding:8px 14px 8px 14px"" href=""#top"">top</a>"
-				if counter<songsCopy.count then
-					records=records & "<a style=""border-radius:5px;color:#FFFFFF;text-decoration:none;background-color:blue;margin-left:5px;margin-top:15px;padding:8px 14px 8px 14px"" href=""#songID"&counter+1&""">" & l("next") & "</a>"
-				end if				
-				records=records & "</p></div>"
-			end if
+				records=records & "<div style=""border-radius:6px;background-color:#fffec8;padding:20px;font-size:16px;"">" & drawLyrics  & "</div>"				
+			end if			
+
+			'####################nav
+			records=records & nav(counter,includeJS)
+			'####################end nav			
 			
 			if not aspl.isEmpty(songsCopy(song).sLyrics) then				
-				records=records & "<pre style=""border-radius:5px;background-color:#F8F9FA;padding:20px;"">" & aspl.htmlEncode(songsCopy(song).sLyrics) & "</pre>"
-			end if
-			
-			records=records & "<p>"
-			records=records & "<a style=""border-radius:5px;color:#000000;text-decoration:none;background-color:#CCCCCC;margin-top:15px;padding:8px 14px 8px 14px"" href=""#top"">top</a>"
-			
-			if counter<songsCopy.count then
-				records=records & "<a style=""border-radius:5px;color:#FFFFFF;text-decoration:none;background-color:blue;margin-left:5px;margin-top:15px;padding:8px 14px 8px 14px"" href=""#songID"&counter+1&""">" & l("next") & "</a>"
-			end if
-			
-			records=records & "</p>"
+				records=records & "<pre style=""border-radius:6px;background-color:#F8F9FA;padding:20px;"">" & aspl.htmlEncode(songsCopy(song).sLyrics) & "</pre>"
+			end if			
 						
 			records=records & "</div>"
 			
