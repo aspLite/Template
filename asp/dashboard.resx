@@ -1,6 +1,4 @@
 <%
-user.checkonline
-
 dim myApp, appKey, myApps : set myApps=aspl.dict
 
 dim customAppID : customAppID=aspl.convertNmbr(aspl.getRequest("customAppID"))
@@ -65,13 +63,13 @@ end if
 if myApps.count=1 then
 
 	for each appKey in myApps
+	
+		set myApp=myApps(appKey)
 
-		if myApps(appKey).bHasAccess then
+		if user.iId<>0 or (myApp.sPublicPath=custumAppPath and not aspl.isEmpty(myApp.sPublicPath)) then
 		
 			on error resume next
-		
-			set myApp=myApps(appKey)
-		
+				
 			'each script start with creating an aspl.form
 			dim form : set form=aspl.form
 			dim appID : set appID=form.field("hidden")
@@ -126,6 +124,7 @@ if myApps.count=1 then
 			on error goto 0
 			
 			'finally, build the form. execution of the script ends here
+			'form.writejs "document.getElementById('bt-search').innerHTML='" & aspl.printTimer & "';"
 			form.build
 			
 		end if

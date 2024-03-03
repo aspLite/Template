@@ -1,7 +1,7 @@
 <%
 class cls_app
 
-	Public iId, sName, bActive, bPublic, bDeleted, sPath, sDefault, sDescription, bShowErrors
+	Public iId, sName, bActive, bPublic, bDeleted, sPath, sDefault, sDescription, bShowErrors, sPublicPath
 	
 	
 	Private Sub Class_Initialize		
@@ -56,6 +56,7 @@ class cls_app
 				sPath			= rs("sPath")
 				sDefault		= rs("sDefault")
 				sDescription	= rs("sDescription")
+				sPublicPath		= rs("sPublicPath")
 				bShowErrors		= aspl.convertBool(rs("bShowErrors"))
 	
 			end if
@@ -99,6 +100,7 @@ class cls_app
 		rs("bShowErrors")			= aspl.convertBool(bShowErrors)
 		rs("sPath")					= left(aspl.convertStr(sPath),50)	
 		rs("sDefault")				= left(aspl.convertStr(sDefault),50)
+		rs("sPublicPath")			= left(aspl.convertStr(sPublicPath),50)
 		rs("sDescription")			= aspl.convertStr(sDescription)
 		
 		rs.Update 

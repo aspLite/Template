@@ -22,6 +22,7 @@ if form.postback then
 		app.bActive			=	aspl.getRequest("bActive")
 		app.sPath			=	aspl.getRequest("sPath")
 		app.sDefault		=	aspl.getRequest("sDefault")
+		app.sPublicPath		=	aspl.getRequest("sPublicPath")
 		app.sDescription	=	aspl.getRequest("sDescription")
 		app.bShowErrors		=	aspl.getRequest("bShowErrors")
 				
@@ -76,6 +77,15 @@ sDefault.add "label",l("defaultscript")
 sDefault.add "name","sDefault"
 sDefault.add "value",app.sDefault
 sDefault.add "maxlength",50
+
+form.newline
+
+dim sPublicPath : set sPublicPath=form.field("text")
+sPublicPath.add "class","form-control"
+sPublicPath.add "label","Public script"
+sPublicPath.add "name","sPublicPath"
+sPublicPath.add "value",app.sPublicPath
+sPublicPath.add "maxlength",50
 
 form.newline
 
