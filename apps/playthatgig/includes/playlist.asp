@@ -95,7 +95,7 @@ class cls_playlist
 		
 		end if
 		
-		getToken=directlink("share","&sToken=" & sToken & "&iId=" & iId)
+		getToken=directlink("share","&iLid=" & user.iLanguageID & "&sToken=" & sToken & "&iId=" & iId)
 	
 	end property
 	
@@ -236,7 +236,7 @@ class cls_playlist
 		Set songsFast = aspL.dict
 	
 		dim sql
-		sql="select tblSong.sTitle, tblSong.sComments, tblSong.sTuning, tblSong.sBPM, tblPlaylistSong.iId, tblPlaylistSong.iSongID "
+		sql="select tblSong.sTitle, tblSong.sComments, tblSong.sTuning, tblSong.sBPM, tblPlaylistSong.iId, tblPlaylistSong.iSongID, tblPlaylistSong.iSort "
 		sql=sql & " from tblPlaylistSong inner join tblSong on tblPlaylistSong.iSongID=tblSong.iId "
 		sql=sql & " where tblPlaylistSong.iPlaylistID=" & iId
 		sql=sql & " order by tblPlaylistSong.iSort asc"
@@ -252,7 +252,8 @@ class cls_playlist
 			song.sComments		= rs("sComments")
 			song.sBPM		 	= rs("sBPM")
 			song.sTitle		 	= rs("sTitle")
-			song.sTuning		 = rs("sTuning")
+			song.sTuning		= rs("sTuning")
+			song.iSort			= rs("iSort")
 		
 			songsFast.add aspl.convertNmbr(rs("iId")),song
 			
@@ -308,29 +309,20 @@ class cls_playlist
 		set rs=nothing
 		
 	end function
-	
 		
 	
-	public function setSort(source, target)	
-
-		dim rs : set rs=dba.execute("select iSort from tblPlaylistSong where iId=" & target)
-		dim rsOld : set rsOld=dba.execute("select iSort from tblPlaylistSong where iId=" & source)
-		
-		dim oldR : oldR=rsOld(0)
-		dim newR : newR=rs(0)
-
-		if oldR>newR then
-			sql="update tblPlaylistSong set iSort=iSort+1 where "
-			sql=sql&" iSort>=" & newR & " and iSort<" & oldR & " and iPlayListID="& iId
-		else
-			sql="update tblPlaylistSong set iSort=iSort-1 where "
-			sql=sql&" iSort>" & oldR & " and iSort<=" & newR & " and iPlayListID="& iId
-		end if
-		
-		dba.execute(sql)
-
-		dba.execute("update tblPlaylistSong set iSort=" & newR & " where iId=" & source)
+	public function setSort(ids)
 	
+		dim sortIDs : sortIDs=split(ids,",")
+		
+		dim safeID, i, counter : counter=0
+		for i=lbound(sortIDs) to ubound(sortIDS)
+			counter=counter+1	
+			safeID=replace(sortIDs(i),"dd","",1,-1,1)
+			safeID=aspl.convertNmbr(safeID)
+			if safeID<>0 then dba.execute("update tblPlayListSong set iSort=" & counter & " where iPlaylistID=" & iId & " and iId=" & safeID)
+		next	
+		
 	end function
 	
 	
@@ -356,10 +348,11 @@ class cls_playlist
 	
 			nav="<p>"			
 			nav=nav & "<a style=""border-radius:6px;color:#FFFFFF;text-decoration:none;background-color:#0B5ED7;margin-right:10px;margin-top:15px;padding:8px 14px 8px 14px"" href=""#songID"&counter+1&""">" & l("next") & "</a>"
+			nav=nav & "<a style=""border-radius:6px;color:#000000;text-decoration:none;background-color:#0DCAF0;margin-right:10px;margin-top:15px;padding:8px 14px 8px 14px"" href=""#songID"&counter-1&""">" & l("previous") & "</a>"
 			nav=nav & "<a style=""border-radius:6px;color:#000000;text-decoration:none;background-color:#FFC107;margin-right:10px;margin-top:15px;padding:8px 14px 8px 14px"" href=""#top"">Top</a>"
 
 			if includeJS then
-				nav=nav &  "<span>" & scroller & "</span>"
+				nav=nav &  "<div>" & scroller & "</div>"
 			end if
 			
 			nav=nav & "</p>"
@@ -379,14 +372,13 @@ class cls_playlist
 		records=records & "<tr>"
 		records=records & "<th>N°</th>"
 		records=records & "<th>" & l("song") & "</th>"
-		records=records & "<th>"  & l("artist") & "</th>"
+		records=records & "<th>" & l("artist") & "</th>"
 		records=records & "<th>" & l("comments") &"</th>"
 		records=records & "<th>" & l("tuning") & "</th>"
 		records=records & "<th>BPM</th>"		
 		records=records & "</tr>"		
 		records=records & "</thead>"
-		records=records & "<tbody>"
-		
+		records=records & "<tbody>"		
 		
 		for each song in songsCopy
 			counter=counter+1	
@@ -413,9 +405,9 @@ class cls_playlist
 			records=records & "<div>"
 			records=records & "<h2>" & counter & ". " & aspl.htmlEncode(songsCopy(song).sTitle) &" (" & aspl.htmlEncode(songsCopy(song).sArtist)  & ")</h2>"	
 						
-			'#################### nav
+			'################################### nav
 			records=records & nav(counter,includeJS)
-			'#################### end nav
+			'################################### end nav
 			
 			records=records & "<p style=""background-color:#F8D7DA;padding:10px;border-radius:6px"">"			
 			
@@ -424,6 +416,7 @@ class cls_playlist
 			if not aspl.isEmpty(songsCopy(song).sTuning) then
 				records=records & "&nbsp;" & l("tuning") & ": <strong>" & aspl.htmlEncode(songsCopy(song).sTuning)  & "</strong>"
 			end if
+			
 			if not aspl.isEmpty(songsCopy(song).sBPM) then
 				records=records & "&nbsp;BPM: <strong>" & aspl.htmlEncode(songsCopy(song).sBPM)& "</strong>"
 			end if
@@ -431,31 +424,46 @@ class cls_playlist
 			records=records & "</p>"	
 			
 			'song files
-			dim songfile,songfiles : set songfiles=songsCopy(song).files
+			dim songfile,songfiles : set songfiles=songsCopy(song).files			
 			
-			if songfiles.count>0 and sec.autologin then
-			
-				records=records & "<p style=""line-height:40px"">"
+			if songfiles.count>0 then			
+				
+				dim images
 				
 				for each songfile in songfiles
-					records=records & "<span style=""background-color:#0DCAF0;padding:8px 14px 8px 14px;border-radius:6px;margin-top:20px;margin-right:10px"">"
-					records=records & "<a style=""color:#000000;text-decoration:none;"" href=""" & directlink("song_filedownload.asp","&iId=" & songfile) & """>"
-					records=records & aspl.htmlEncode(songfiles(songfile).sFilename) & "</a></span>"
-				next
 				
-				records=records & "</p>"
+					records=records & "<div style=""border-radius:6px;border:1px solid #CCC;padding:10px;text-align:center;float:left;width:130px;background-color:#F8F9FA;margin-top:1px;margin-right:10px"">"
+									
+					select case lcase(songfiles(songfile).sExt)
+					
+						case "jpg","jpeg","gif","png"
+						
+							records=records & "<a style=""font-size:13px;color:#000000;text-decoration:none;"" target=""_blank"" href=""" & songfiles(songfile).imageSrc(1600) & """><img alt=""" & aspl.htmlEncode(songfiles(songfile).sFilename) & """ src=""" & songfiles(songfile).imageSrc(110) & """ style=""border-radius:6px;width:100%"" /><br />"
+						
+						case else
+						
+							records=records & "<a style=""color:#000000;text-decoration:none;"" href=""" & directlink("song_filedownload.asp","&iId=" & songfile) & """>"
+						
+						
+					end select				
+					
+					records=records & aspl.htmlEncode(songfiles(songfile).sFilename) & "." & aspl.htmlEncode(songfiles(songfile).sExt) & "</a></div>"
+					
+				next				
+				
+				records=records & "<div style=""clear:both""><br /></div>"
 				
 			end if			
 
 			drawLyrics=br(aspl.htmlEncode(songsCopy(song).drawLyrics))
 			
 			if not aspl.isEmpty(drawLyrics) then
-				records=records & "<div style=""border-radius:6px;background-color:#fffec8;padding:20px;font-size:16px;"">" & drawLyrics  & "</div>"				
+				records=records & "<div style=""border-radius:6px;background-color:#fffec8;padding:20px;font-size:16px;"">" & drawLyrics & "</div>"				
 			end if			
 
-			'####################nav
+			'######################################## nav
 			records=records & nav(counter,includeJS)
-			'####################end nav			
+			'######################################## end nav			
 			
 			if not aspl.isEmpty(songsCopy(song).sLyrics) then				
 				records=records & "<pre style=""border-radius:6px;background-color:#F8F9FA;padding:20px;"">" & aspl.htmlEncode(songsCopy(song).sLyrics) & "</pre>"

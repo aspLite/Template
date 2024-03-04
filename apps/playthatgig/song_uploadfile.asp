@@ -28,10 +28,11 @@ for each fileKey in Upload.UploadedFiles.keys
 	sFile.sExt		= sExt
 	sFile.iFilesize	= filesize
 	sFile.iSongID	= aspl.getRequest("iId")
+	sFile.sToken	= aspl.randomizer.createguid(10)		
 	sFile.save
 	
 	'rename to resx
-	Upload.UploadedFiles(fileKey).rename(server.mappath(myApp.sPath & "/uploads/") & "\" & sFile.iID & ".resx")	 ' doc.iId
+	Upload.UploadedFiles(fileKey).rename(server.mappath(myApp.sPath & "/uploads/") & "\" & sFile.iID & sFile.sToken & ".resx")	 ' doc.iId
 	
 	set sFile=nothing
 	

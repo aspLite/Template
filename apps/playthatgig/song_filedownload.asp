@@ -8,6 +8,6 @@ songFile.pick(form.request("iId"))
 
 set song=songFile.song : if song.iId=0 then aspl.die
 
-aspL.dumpBinary myApp.sPath & "/uploads/" & songFile.iId & ".resx",songFile.sFilename & "." & songFile.sExt
+aspL.dumpBinary myApp.sPath & "/uploads/" & songFile.iId & songFile.sToken & ".resx",songFile.sFilename & "." & songFile.sExt
 
 %>

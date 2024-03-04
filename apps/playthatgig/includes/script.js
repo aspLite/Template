@@ -1,25 +1,25 @@
-  function allowDrop(ev) {
-        ev.preventDefault();
-    }
-
-    function drag(ev) {
-        ev.dataTransfer.setData("text", ev.target.id);	
 		
-    }
-
-    function drop(ev) {
-        ev.preventDefault();
-        var data = ev.dataTransfer.getData("text");	
-
-        thisdiv = ev.target;
-        $(document.getElementById(data)).insertBefore(thisdiv);
-		
-		//console.log("source:" + data);	
-		//console.log("target:" + ev.target.id);	
-	
-		$('#iTargetID').val(ev.target.id);
-		$('#iDivID').val(data);
+$( function() {
+	$( "#sortable" ).sortable({
+	  revert: true,	 
+	  forceFallback: true,
+	  update: function(event,ui){	  
+		$('#iDivID').val($(this).sortable('toArray', { attribute: 'id' }));		
 		$('#[FORMID]').submit();
-		return false;		
-		
-    }
+		},
+	  start: function(event, ui) {
+        $(this).height('auto');
+		$(ui.item).css('background-color','#FFDC7C');
+		}
+	});
+	$( "#sortable" ).droppable({
+	 drop: function(event, ui) {			
+		}
+	});
+	$( "#draggable" ).draggable({
+	  connectToSortable: "#sortable",
+	  helper: "clone",
+	  revert: "invalid"
+	});
+	$( "ul, li" ).disableSelection();
+  } );

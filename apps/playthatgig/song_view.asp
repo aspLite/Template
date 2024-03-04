@@ -26,11 +26,6 @@ dim metronome : set metronome=form.field("submit")
 metronome.add "html",l("metronome")
 metronome.add "class","btn btn-info"
 
-'dim autoscroll : set autoscroll=form.field("button")
-'autoscroll.add "html","Autoscroll"
-'autoscroll.add "class","btn btn-danger"
-'autoscroll.add "onclick","var intervalId;var scrollDistance = 5;intervalId = setInterval(function() {window.scrollTo(0, window.pageYOffset + scrollDistance);}, 100);"
-
 dim close : set close=form.field("button")
 close.add "html",l("close")
 close.add "class","btn btn-secondary"
@@ -39,13 +34,36 @@ close.add "databsdismiss","modal"
 dim button, songfiles, songfile : set songfiles=song.files
 
 if songfiles.count>0 then form.newline
+
+dim images
  
 for each songfile in songfiles
+	
 	set button=form.field("button")
-	button.add "html",getIcon("download") & songfiles(songfile).sFilename
-	button.add "class","btn btn-sm btn-warning"
-	button.add "onclick",songfiles(songfile).downloadLink
+	button.add "html",songfiles(songfile).sFilename & "." & songfiles(songfile).sExt
+	button.add "class","btn btn-warning"
+	
+	select case lcase(songfiles(songfile).sExt)
+
+		case "jpg","jpeg","png","gif","bmp"		
+		
+			button("html")=button("html") & " (" & l("clicktoview") & ")"
+			
+			form.writeJS "var state" & songfile &"=0;"	
+	
+			button.add "onclick","if(state" & songfile &"==0) {$('#songID" & songfile & "').removeClass('d-none');state" & songfile &"=1;$('#songID" & songfile & "').attr('src','" & songfiles(songfile).imageSrc(1600) & "');} else {$('#songID" & songfile & "').addClass('d-none');state" & songfile &"=0;};"
+			'form.write 
+			images=images & "<img id=""songID" & songfile & """ class=""d-none"" style=""width:100%"" src="""" />"
+		
+		case else
+		
+			button.add "onclick",songfiles(songfile).downloadLink
+		
+	end select
+	
 next
+
+if images<>"" then form.write images
 
 dim iId : set iId=form.field("hidden")
 iId.add "value",song.iId

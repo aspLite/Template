@@ -1,7 +1,7 @@
 <%
 class cls_songFile
 
-	public iId, sFilename, iFilesize, iSongID, sExt
+	public iId, sFilename, iFilesize, iSongID, sExt, sToken
 	
 	private sub class_initialize
 		iId=0				
@@ -19,7 +19,8 @@ class cls_songFile
 				sFilename		=	rs("sFilename")	
 				sExt			=	rs("sExt")
 				iFilesize		=	rs("iFilesize")
-				iSongID			=	rs("iSongID")			
+				iSongID			=	rs("iSongID")
+				sToken			=	rs("sToken")
 			
 			end if
 					
@@ -44,14 +45,15 @@ class cls_songFile
 			if iId<>0 then
 				rs.Open "select * from tblSongFile where iId="& aspl.convertNmbr(iId)				
 			else
-				rs.Open "select * from tblSongFile where 1=2"				
+				rs.Open "select * from tblSongFile where 1=2"
 				rs.AddNew							
 			end if		
 			
 			rs("sFilename")			= sFilename
 			rs("sExt")				= sExt
 			rs("iFilesize")			= iFilesize
-			rs("iSongID")			= aspl.convertNmbr(iSongID)			
+			rs("iSongID")			= aspl.convertNmbr(iSongID)	
+			rs("sToken")			= sToken
 			
 			rs.update()
 			
@@ -81,7 +83,7 @@ class cls_songFile
 		if iId<>0 then			
 			
 			'first remove file$
-			aspl.fso.deletefile(server.mappath(myApp.sPath & "/uploads") & "\" & iId & ".resx")
+			aspl.fso.deletefile(server.mappath(myApp.sPath & "/uploads") & "\" & iId & sToken & ".resx")
 		
 			set rs=dba.execute("delete from tblSongFile where iId="& iId)
 			set rs=nothing
@@ -111,7 +113,21 @@ class cls_songFile
 	
 	public property get downloadLink
 	
-		downloadLink="location.assign('" & directlink("song_filedownload.asp","&iId=" & iId)& "');"
+		downloadLink="location.assign('" & directlink("song_filedownload.asp","&iId=" & iId) & "');"
+		
+	end property
+	
+	
+	public property get imageSrc(width)
+		
+		dim square
+	
+		if width<500 then square="square=1&"
+	
+		dim vd : vd=request.servervariables("SCRIPT_NAME") 
+		vd=replace(vd,"default.asp","",1,-1,1)
+	
+		imageSrc=getSiteUrl & "/asplite/plugins/jpg/jpg.aspx?"&square&"maxSize=" & width & "&img=" & server.urlEncode(vd & myApp.sPath & "/uploads/" & iId & sToken & ".resx")
 		
 	end property
 

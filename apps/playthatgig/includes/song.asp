@@ -1,7 +1,7 @@
 <%
 class cls_song
 
-	Public iId, sTitle, sLyrics, sComments, iUserID, sArtist, sDuration, sBPM, sTuning, sChords, sTab, iLanguageID, dUpdatedTS, bDeleted
+	Public iId, sTitle, sLyrics, sComments, iUserID, sArtist, sDuration, sBPM, sTuning, sChords, sTab, iLanguageID, dUpdatedTS, bDeleted, iSort
 	
 	
 	Private Sub Class_Initialize		
@@ -226,8 +226,12 @@ class cls_songs
 		
 		while not rs.eof			
 		
-			set song=new cls_song : song.pick(aspl.convertNmbr(rs("iId")))
-		
+			set song=new cls_song
+			
+			song.iId		= aspl.convertNmbr(rs("iId"))
+			song.sArtist	= aspl.convertStr(rs("sArtist"))
+			song.sTitle		= aspl.convertStr(rs("sTitle"))
+					
 			list.add song.iId,song
 			
 			set song=nothing
