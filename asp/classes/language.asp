@@ -138,6 +138,9 @@ function l(sCode)
 	
 	looper=looper+1 : if looper>2 then looper=0 : l="" : exit function
 	
+	'overrule default language
+	if aspl.convertNmbr(aspl.getRequest("iLid"))<>0 then user.iLanguageID=aspl.convertNmbr(aspl.getRequest("iLid"))
+	
 	dim langID
 	if user.language.iId=0 or not user.language.bActive or user.language.bDeleted then 
 		langID=defaultLanguage.iId
