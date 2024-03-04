@@ -15,7 +15,7 @@ class cls_song
 		check=true
 		
 		if aspl.isempty(sTitle) then
-			aspl.addErr(l("nameismandatory"))
+			aspl.addErr(l("titleismandatory"))
 			check=false
 		end if		
 		

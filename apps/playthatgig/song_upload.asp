@@ -9,7 +9,7 @@ form.onSubmit=""
 dim song : set song = new cls_song
 song.pick (form.request("iId")) : if song.iId=0 then aspl.die
 
-form.writeJS "$('#crmModalLabel').html('" & l("files") & " " & song.sTitle & "')"
+form.writeJS modalLabel(l("files") & " " & song.sTitle)
 
 'iSongID
 dim iSongID : set iSongID = form.field("hidden")

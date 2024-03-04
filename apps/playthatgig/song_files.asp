@@ -5,7 +5,7 @@ aspl(myApp.sPath & "/includes/begin.asp")
 'create an instance of the song class
 dim song : set song = new cls_song : song.pick(form.request("iId"))
 
-form.writejs modalLabel(l("files") & " " & aspl.htmlencode(song.sTitle))
+form.writejs modalLabel(l("files") & " " & song.sTitle)
 
 set back=form.field("button")
 back.add "html",l("back")

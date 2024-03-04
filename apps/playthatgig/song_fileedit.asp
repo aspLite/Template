@@ -9,7 +9,7 @@ songFile.pick(form.request("iId"))
 'create an instance of the afdeling class
 set song = songFile.song : if song.iId=0 then aspl.die
 
-form.writejs modalLabel(aspl.htmlEncJs(song.sTitle))
+form.writejs modalLabel(song.sTitle)
 
 'catch ajax call!
 if form.postback then
