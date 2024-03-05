@@ -24,6 +24,11 @@ function loadmodal(value,qs)
 	loadmodal=loadmodal & "return false;"
 end function
 
+function loadmodalonload(value,qs)
+	loadmodalonload="modalAspForm ('dashboard',"
+	loadmodalonload=loadmodalonload & "'&customAppID=" & myApp.iId & "&custumAppPath=" & server.urlEncode(value) & "','" & qs & "');"	
+end function
+
 function loadmodaliId(value,iId,qs)
 	loadmodaliId="modalAspForm ('dashboard','"
 	loadmodaliId=loadmodaliId & iId & "&customAppID=" & myApp.iId & "&custumAppPath=" & server.urlEncode(value) & "','" & qs & "');"

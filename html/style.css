@@ -55,11 +55,6 @@ white-space: nowrap;
 -webkit-overflow-scrolling: touch;
 }
 
-.btn {
-	margin-right:5px;
-	margin-bottom:5px;
-}
-
 .btn-bd-primary {
 --bd-violet-bg: #712cf9;
 --bd-violet-rgb: 112.520718, 44.062154, 249.437846;

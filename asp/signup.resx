@@ -24,7 +24,12 @@ if aspl.convertNmbr(session("userToBeConfirmed"))<>0 then
 				userConf.sPw=sha256(aspl.getRequest("sPw"))				
 				userConf.confirm()
 				
-				aspl.addFB(l("youreallsetpleasesignin"))
+				'aspl.addFB(l("youreallsetpleasesignin"))
+				
+				'autologin
+				sec.signin userConf.sEmail,userConf.sPw
+				
+				form.writejs "location.assign('" & getSiteUrl & "');"
 				
 				form.build				
 				

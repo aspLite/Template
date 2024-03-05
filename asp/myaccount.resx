@@ -4,6 +4,8 @@ dim form : set form=aspl.form
 dim userObj : set userObj=new cls_user
 userObj.pick(user.iId) : userObj.mustexist
 
+dim copyLID : copyLID=userObj.iLanguageID
+
 form.writejs modalLabel(l("myaccount"))
 
 if form.postback then
@@ -16,9 +18,25 @@ if form.postback then
 		userObj.sEmail		=	aspl.getRequest("sEmail")
 		userObj.iLanguageID	=	aspl.getRequest("iLanguageID")
 		
-		if userObj.save then
+		if userObj.save then				
 			
-			aspl.addFB(l("changeshavebeensaved"))	
+			if aspl.convertNmbr(copyLID)<>aspl.convertNmbr(userObj.iLanguageID) then
+			
+				overruleLID=userObj.iLanguageID
+			
+				aspl.addWarning(l("reloadafterlanguageswitch"))	
+				
+				dim reload : set reload=form.field("button")
+				reload.add "html",l("reload")
+				reload.add "class","btn btn-warning"
+				reload.add "onclick","location.assign('" & getSiteUrl & "');"
+				
+				form.build
+				
+			end if		
+
+			aspl.addFB(l("changeshavebeensaved"))			
+			
 			form.writejs "$('#usertable').DataTable().ajax.reload();"
 			
 		end if
