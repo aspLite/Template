@@ -68,7 +68,7 @@ class cls_playlist
 			rs.Open "select * from tblPlaylist where bDeleted=false and iUserID=" & user.iId & " and iId="& iId
 		end if
 		
-		rs("sName")					= left(aspl.convertStr(aspl.removeTabs(sName)),255)		
+		rs("sName")					= left(aspl.textonly(sName),255)		
 		rs("sDescription")			= aspl.convertStr(aspl.removeTabs(sDescription))
 		rs("iUserID")				= aspl.convertNull(user.iId)
 		rs("bDeleted")				= aspl.convertBool(bDeleted)
@@ -347,9 +347,10 @@ class cls_playlist
 	private function nav(counter,includeJS)
 	
 			nav="<p>"			
+			nav=nav & "<a style=""border-radius:6px;color:#000000;text-decoration:none;background-color:#FFC107;margin-right:10px;margin-top:15px;padding:8px 14px 8px 14px"" href=""#top"">Top</a>"
 			nav=nav & "<a style=""border-radius:6px;color:#FFFFFF;text-decoration:none;background-color:#0B5ED7;margin-right:10px;margin-top:15px;padding:8px 14px 8px 14px"" href=""#songID"&counter+1&""">" & l("next") & "</a>"
 			nav=nav & "<a style=""border-radius:6px;color:#000000;text-decoration:none;background-color:#0DCAF0;margin-right:10px;margin-top:15px;padding:8px 14px 8px 14px"" href=""#songID"&counter-1&""">" & l("previous") & "</a>"
-			nav=nav & "<a style=""border-radius:6px;color:#000000;text-decoration:none;background-color:#FFC107;margin-right:10px;margin-top:15px;padding:8px 14px 8px 14px"" href=""#top"">Top</a>"
+			nav=nav & "<a style=""border-radius:6px;color:#FFFFFF;text-decoration:none;background-color:#198754;margin-right:10px;margin-top:15px;padding:8px 14px 8px 14px"" href=""#songIDChords"&counter&""">" & l("chords") & "</a>"
 
 			if includeJS then
 				nav=nav &  "<div>" & scroller & "</div>"
@@ -363,7 +364,7 @@ class cls_playlist
 	
 		dim drawLyrics, counter, records, song, songsCopy : set songsCopy=songs : records="" : counter=0
 
-		records="<h1>" & aspl.htmlEncode(sName) & " (" & songsCopy.count & " " & l("songs") & ")</h1>"
+		records="<h1>" & aspl.htmlEncode(sName) & " (" & songsCopy.count & " " & lcase(l("songs")) & ")</h1>"
 		records=records & "<h3>" & aspl.htmlEncode(sDescription) & "</h3>"
 		
 		records=records & "<a name=""top""></a>"
@@ -466,7 +467,7 @@ class cls_playlist
 			'######################################## end nav			
 			
 			if not aspl.isEmpty(songsCopy(song).sLyrics) then				
-				records=records & "<pre style=""border-radius:6px;background-color:#F8F9FA;padding:20px;"">" & aspl.htmlEncode(songsCopy(song).sLyrics) & "</pre>"
+				records=records & "<a name=""songIDChords" & counter & """></a><pre style=""border-radius:6px;background-color:#F8F9FA;padding:20px;"">" & aspl.htmlEncode(songsCopy(song).sLyrics) & "</pre>"
 			end if			
 						
 			records=records & "</div>"

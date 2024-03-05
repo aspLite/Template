@@ -19,6 +19,21 @@ class cls_song
 			check=false
 		end if		
 		
+		'bestaat reeds? 
+		
+		dim rs,sql
+		sql="select iId from tblSong "
+		sql=sql & "where iUserID=" & user.iId & " and sTitle='" & aspl.sqli(aspl.textonly(sTitle)) & "' "
+		sql=sql & "and sArtist='" & aspl.sqli(aspl.textonly(sArtist)) & "' "
+		sql=sql & "and bDeleted=false and iId<>" & aspl.convertNmbr(iId)
+		
+		set rs=dba.execute(sql)
+		
+		if not rs.eof then
+			aspl.addErr(l("thissongexistsalready"))
+			check=false
+		end if
+		
 	end function
 			
 	
@@ -76,11 +91,11 @@ class cls_song
 			rs.Open "select * from tblSong where bDeleted=false and iUserID=" & user.iId & " and iId="& iId
 		end if		
 	
-		rs("sTitle") 			= left(aspl.convertStr(aspl.removeTabs(sTitle)),255)	
+		rs("sTitle") 			= left(aspl.textonly(sTitle),255)	
 		rs("sLyrics") 			= aspl.convertStr(sLyrics)
 		rs("sComments") 		= aspl.convertStr(sComments)
 		rs("iUserID") 			= user.iId
-		rs("sArtist") 			= left(aspl.convertStr(aspl.removeTabs(sArtist)),255)
+		rs("sArtist") 			= left(aspl.textonly(sArtist),255)
 		rs("sDuration") 		= aspl.convertStr(sDuration)
 		rs("sBPM") 				= sBPM
 		rs("sTuning") 			= sTuning

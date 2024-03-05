@@ -29,6 +29,14 @@ if form.postback then
 			
 			if aspl.convertNmbr(form.request("iPlaylistID"))<>0 then
 			
+				if aspl.convertBool(form.request("addTo")) then
+					dim playlist : set playlist=new cls_playlist
+					playlist.pick(form.request("iPlaylistID"))
+					playlist.addSong(song.iId)
+					set playlist=nothing
+					bNew=false
+				end if
+			
 				form.writejs loadInTarget("dashboard","playlist_manage.asp","&iId=" & form.request("iPlaylistID"))
 			
 			else
@@ -52,6 +60,10 @@ iId.add "name","iId"
 dim iPlaylistID : set iPlaylistID=form.field("hidden")
 iPlaylistID.add "value",form.request("iPlaylistID")
 iPlaylistID.add "name","iPlaylistID"
+
+dim addTo : set addTo=form.field("hidden")
+addTo.add "value",form.request("addTo")
+addTo.add "name","addTo"
 
 dim sTitle : set sTitle=form.field("text")
 sTitle.add "required",true

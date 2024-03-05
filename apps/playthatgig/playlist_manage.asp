@@ -86,7 +86,7 @@ doMail.add "id","doMail"
 
 dim heading : heading=""
 heading=heading & "<div class=""container-fluid py-3 justify-content-center text-center"">"
-heading=heading & "<h1 class=""display-6 fw-bold"">" & aspl.htmlencode(playlist.sName) & " (" & songs.count & " songs)</h1>"
+heading=heading & "<h1 class=""display-6 fw-bold"">" & aspl.htmlencode(playlist.sName) & " (" & songs.count & " " & lcase(l("songs")) & ")</h1>"
 heading=heading & "<p class=""col-md-12 fs-4"">" & aspl.htmlencode(playlist.sDescription) & "</p>"
 heading=heading & "</div>"
 
@@ -97,13 +97,13 @@ dim buttons : buttons="<div class=""justify-content-center text-center"">"
 buttons=buttons & "<button style=""margin-right:5px;margin-bottom:5px"" onclick=""" & load("","") & """ id="""" class=""btn btn-secondary"">"&l("back")&"</button>"
 buttons=buttons & "<button style=""margin-right:5px;margin-bottom:5px"" onclick=""" & loadmodaliId("playlist_edit.asp",playlist.iId,"&iPlayListID=" & playlist.iId) & """ id="""" class=""btn btn-primary"">"&l("edit")&"</button>"
 buttons=buttons & "<button style=""margin-right:5px;margin-bottom:5px"" onclick=""$('#doCopy').val('1');$('#" & form.id & "').submit();return false;"" id="""" class=""btn btn-warning"">"&l("copy")&"</button>"
-buttons=buttons & "<button style=""margin-right:5px;margin-bottom:5px"" onclick=""" & loadmodaliId("playlist_randomsort.asp",playlist.iId,"") & """ id="""" class=""btn btn-dark"">Random sort</button>"
 buttons=buttons & "<button style=""margin-right:5px;margin-bottom:5px"" onclick=""" & loadmodaliId("playlist_delete.asp",playlist.iId,"&iPlayListID=" & playlist.iId) & """ id="""" class=""btn btn-danger"">"&l("delete")&"</button>"
-buttons=buttons & "<button style=""margin-right:5px;margin-bottom:5px"" onclick=""" & loadmodalXLiId("playlist_export.asp",playlist.iId,"") & """ id="""" class=""btn btn-success"">Export</button>"
-buttons=buttons & "<a style=""margin-right:5px;margin-bottom:5px"" href=""" & directlink("playlist_golive.asp","&iId=" &playlist.iId) & """ target=""_blank"" class=""btn btn-primary"">Go live <span class=""spinner-grow spinner-grow-sm"" role=""status"" aria-hidden=""true""></span></a>"
+buttons=buttons & "<button style=""margin-right:5px;margin-bottom:5px"" onclick=""" & loadmodaliId("playlist_randomsort.asp",playlist.iId,"") & """ id="""" class=""btn btn-dark"">Random sort</button>"
+buttons=buttons & "<button style=""margin-right:5px;margin-bottom:5px"" onclick=""" & loadmodaliId("playlist_export.asp",playlist.iId,"") & """ id="""" class=""btn btn-success"">Export</button>"
 buttons=buttons & "<button style=""margin-right:5px;margin-bottom:5px"" onclick=""location.assign('" & directlink("playlist_download.asp","&iId=" & playlist.iId)& "');"" id="""" class=""btn btn-info"">"&l("download")&"</button>"
 buttons=buttons & "<button style=""margin-right:5px;margin-bottom:5px"" onclick=""window.prompt('Copy to clipboard: Ctrl+C, Enter', '" & playlist.getToken & "');"" id="""" class=""btn btn-secondary"">Share</button>"
 buttons=buttons & "<button style=""margin-right:5px;margin-bottom:5px"" onclick=""$('#doMail').val('1');$('#" & form.id & "').submit();return false;"" id="""" class=""btn btn-warning"">"&l("tomail")&"</button>"
+buttons=buttons & "<a style=""margin-right:5px;margin-bottom:5px"" href=""" & directlink("playlist_golive.asp","&iId=" &playlist.iId) & """ target=""_blank"" class=""btn btn-primary"">Go live <span class=""spinner-grow spinner-grow-sm"" role=""status"" aria-hidden=""true""></span></a>"
 buttons=buttons & "</div>"
 
 form.write buttons
@@ -111,7 +111,7 @@ form.write buttons
 form.newline
 
 if songs.count=0 then
-	form.write "<div class=""alert alert-warning lead"">" & l("thisplaylisthasnosongsyet") & "</div>"
+	form.write "<div style=""margin:0 auto;width:85%"" class=""alert alert-warning lead"">" & l("thisplaylisthasnosongsyet") & "</div>"
 end if
 
 dim drag : drag="<div id=""sortable"" style=""margin:0 auto;width:85%"">"
@@ -160,6 +160,15 @@ next
 drag=drag & "</div>"
 
 form.write drag
+form.newline
+
+dim createnewsong 
+createnewsong="<div class=""justify-content-center text-center"" style=""margin:0 auto"">"
+createnewsong=createnewsong & "<button onclick=""" & loadmodaliId("song_edit.asp","","&addTo=1&iPlayListID=" & playlist.iId) & """ class=""btn btn-success"">"
+createnewsong=createnewsong & l("createnewsong") 
+createnewsong=createnewsong & "</button></div>"
+
+form.write createnewsong
 
 dim allRS : set allRS=songRS
 dim table : table="<table style=""margin:0 auto;width:85%"" id=""newsongs"" class=""table table-striped"">"

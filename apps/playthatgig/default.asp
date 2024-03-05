@@ -13,6 +13,8 @@ form.write defaulthtm
 form.writejs loadInTarget("playlists","playlists.asp","")
 form.writejs loadInTarget("songs","songs.asp","")
 
-'aspl(myApp.sPath & "/fill.txt")
+if isNewUser then
+	form.writejs loadmodalonload("welcome.asp","")
+end if
 
 %>
